@@ -25,7 +25,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Scarica il codice
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Prepara i file del sito
         run: |
@@ -37,13 +37,13 @@ jobs:
                 _site/
 
       - name: Configura GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Carica i file
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
       - name: Pubblica
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
