@@ -1,0 +1,207 @@
+/* ==========================================================================
+   screens.css
+   Regole specifiche delle singole schermate.
+   ========================================================================== */
+
+/* Distanza tra i blocchi, schermata per schermata */
+.screen[data-screen="percorsi"] .screen__inner,
+.screen[data-screen="dettaglio"] .screen__inner,
+.screen[data-screen="gruppi"] .screen__inner,
+.screen[data-screen="uscita"] .screen__inner,
+.screen[data-screen="mappa"] .screen__inner,
+.screen[data-screen="proponi"] .screen__inner {
+  --screen-gap: 20px;
+}
+
+.screen[data-screen="chat"] .screen__inner {
+  --screen-gap: 16px;
+}
+
+.screen[data-screen="profilo"] .screen__inner {
+  --screen-gap: 22px;
+}
+
+/* --------------------------------------------------------------------------
+   Home
+   -------------------------------------------------------------------------- */
+/* Nella home i blocchi hanno già la distanza di 28px del contenitore */
+.screen[data-screen="home"] .block {
+  gap: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Percorsi
+   -------------------------------------------------------------------------- */
+.screen[data-screen="percorsi"] .field {
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Dettaglio percorso
+   -------------------------------------------------------------------------- */
+.route-hero {
+  width: 100%;
+  height: 200px;
+  border-radius: var(--radius);
+  background: var(--sand);
+}
+
+/* Versione più bassa, usata sotto la descrizione del percorso */
+.route-hero--compact {
+  height: 120px;
+}
+
+.detail-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-meta {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.detail-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.screen[data-screen="dettaglio"] .block {
+  gap: 12px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.review {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Uscite in gruppo
+   -------------------------------------------------------------------------- */
+.screen[data-screen="gruppi"] header.block {
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Mappa
+   -------------------------------------------------------------------------- */
+.map {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  background: #E8EEF0;
+}
+
+.map-note {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Profilo
+   -------------------------------------------------------------------------- */
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-id {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.profile-sub {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.screen[data-screen="profilo"] .block {
+  gap: 12px;
+}
+
+/* Riga di un'uscita prenotata */
+.joined-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.joined-card__date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.joined-card__title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.joined-card__meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Dettaglio uscita
+   -------------------------------------------------------------------------- */
+.screen[data-screen="uscita"] .block {
+  gap: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   Chat
+   -------------------------------------------------------------------------- */
+/* La chat occupa tutta l'altezza disponibile: i messaggi scorrono
+   e il campo di scrittura resta in basso */
+.screen[data-screen="chat"] {
+  display: flex;
+  flex: 1;
+}
+
+.screen[data-screen="chat"] .screen__inner {
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Proponi una tappa
+   -------------------------------------------------------------------------- */
+.screen[data-screen="proponi"] .form {
+  gap: 16px;
+}

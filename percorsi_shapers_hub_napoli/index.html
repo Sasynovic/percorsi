@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Percorsi: prototipo di app per scoprire percorsi, uscite in gruppo e realtà locali dei quartieri di Napoli.">
+  <title>Percorsi — prototipo app</title>
+
+  <!-- Fogli di stile: base (struttura), componenti (bottoni, card...), schermate -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/screens.css">
+</head>
+
+<body>
+  <main class="app" aria-label="Prototipo dell'app Percorsi">
+
+    <!-- Area che scorre (sopra la barra di navigazione) -->
+    <div class="app__scroll" id="app-scroll">
+      <div class="app__content">
+
+        <!-- ============================================================
+             HOME
+             ============================================================ -->
+        <section class="screen" data-screen="home" aria-labelledby="home-title">
+          <div class="screen__inner">
+
+            <header class="topbar">
+              <button class="city-pill" type="button" data-demo="cambio città">
+                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="#A8401D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path>
+                  <circle cx="12" cy="9.5" r="2.5"></circle>
+                </svg>
+                Napoli
+                <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                     stroke="#4A5568" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6"></path>
+                </svg>
+              </button>
+
+              <button class="icon-btn" type="button" aria-label="Notifiche" data-demo="notifiche">
+                <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="#1A2238" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path>
+                  <path d="M10 20a2 2 0 0 0 4 0"></path>
+                </svg>
+              </button>
+            </header>
+
+            <div class="intro">
+              <p class="intro__hello">Ciao!</p>
+              <h1 class="title-xl" id="home-title">Dove camminiamo questo weekend?</h1>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cerca-home">Cerca</label>
+              <div class="input-wrap">
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="#4A5568" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <path d="M20 20l-3.5-3.5"></path>
+                </svg>
+                <input class="input js-search" id="cerca-home" type="search" autocomplete="off"
+                       placeholder="Quartiere, percorso o realtà locale">
+              </div>
+            </div>
+
+            <!-- Uscite in gruppo -->
+            <section class="block" aria-labelledby="uscite-title">
+              <div class="section-head">
+                <h2 id="uscite-title">Uscite in gruppo</h2>
+                <button class="link-more" type="button" data-go="gruppi">Vedi tutte</button>
+              </div>
+
+              <div class="chips" data-chips></div>
+
+              <p class="empty" id="uscite-home-empty" hidden>
+                Nessuna uscita per questo filtro. Prova un altro interesse.
+              </p>
+
+              <div class="hscroll" id="uscite-home"></div>
+            </section>
+
+            <!-- Percorsi in evidenza -->
+            <section class="block" aria-labelledby="percorsi-title">
+              <div class="section-head">
+                <h2 id="percorsi-title">Percorsi in evidenza</h2>
+                <button class="link-more" type="button" data-go="percorsi">Esplora</button>
+              </div>
+              <div class="stack-list" id="percorsi-home"></div>
+            </section>
+
+            <!-- Realtà locali -->
+            <section class="block" aria-labelledby="realta-title">
+              <div class="section-head">
+                <h2 id="realta-title">Chi anima il quartiere</h2>
+                <button class="link-more" type="button" data-go="mappa">Sulla mappa</button>
+              </div>
+              <div class="list" id="realta-home"></div>
+            </section>
+
+            <!-- Invito a proporre -->
+            <section class="cta-dark">
+              <h2>Hai un luogo, un percorso o un’attività da proporre?</h2>
+              <p>Puoi proporre una tappa, un percorso, un gruppo o un’attività a una guida verificata.</p>
+              <button class="btn btn--peach" type="button" data-go="proponi">Proponi qualcosa</button>
+            </section>
+
+          </div>
+        </section>
+
+        <!-- ============================================================
+             PERCORSI
+             ============================================================ -->
+        <section class="screen" data-screen="percorsi" aria-labelledby="percorsi-screen-title" hidden>
+          <div class="screen__inner">
+            <h1 class="title-xl" id="percorsi-screen-title">Percorsi</h1>
+
+            <div class="field">
+              <label class="field__label" for="cerca-percorsi">Cerca un percorso o un quartiere</label>
+              <div class="input-wrap">
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="#4A5568" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <path d="M20 20l-3.5-3.5"></path>
+                </svg>
+                <input class="input js-search" id="cerca-percorsi" type="search" autocomplete="off"
+                       placeholder="Es. Sanità, Bagnoli…">
+              </div>
+            </div>
+
+            <p class="empty" id="percorsi-empty" hidden>
+              Nessun percorso trovato. Vuoi proporne uno?
+            </p>
+
+            <div class="stack-list" id="percorsi-list"></div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             DETTAGLIO PERCORSO
+             ============================================================ -->
+        <section class="screen" data-screen="dettaglio" aria-labelledby="detail-title" hidden>
+          <div class="screen__inner">
+
+            <button class="back-link" type="button" data-go="percorsi" aria-label="Torna ai percorsi">
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="#1A2238" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 6l-6 6 6 6"></path>
+              </svg>
+              Percorsi
+            </button>
+
+            <figure class="place-media">
+              <img id="percorso-img" src="" alt="">
+              <figcaption class="place-media__date" id="percorso-place"></figcaption>
+            </figure>
+
+            <div class="detail-head">
+              <p class="badge" data-detail="badge">Fuori dal centro</p>
+              <h1 class="title-lg" id="detail-title" data-detail="name"></h1>
+              <p class="detail-meta" data-detail="meta"></p>
+              <div class="tags" id="percorso-tags"></div>
+            </div>
+
+            <div class="organizer">
+              <img class="organizer__avatar" id="percorso-guida-img" src="" alt="">
+              <div class="organizer__text">
+                <span class="organizer__label">Accompagnato da</span>
+                <span class="organizer__name" id="percorso-guida-name"></span>
+                <span class="organizer__role" id="percorso-guida-role"></span>
+              </div>
+            </div>
+
+            <p class="detail-text" data-detail="description"></p>
+
+            <dl class="facts facts--quad">
+              <div class="facts__item">
+                <dt>Distanza</dt>
+                <dd data-detail="km"></dd>
+              </div>
+              <div class="facts__item">
+                <dt>Durata</dt>
+                <dd data-detail="durata"></dd>
+              </div>
+              <div class="facts__item">
+                <dt>Età</dt>
+                <dd data-detail="eta"></dd>
+              </div>
+              <div class="facts__item">
+                <dt>Nel gruppo</dt>
+                <dd data-detail="partecipanti"></dd>
+              </div>
+            </dl>
+
+            <div class="actions-stack">
+              <button class="btn btn--primary btn--tall" type="button" id="percorso-join" data-join-percorso>
+                Unisciti al gruppo
+              </button>
+              <button class="btn btn--outline btn--tall" type="button" data-chat-percorso>
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 12a8 8 0 0 1-8 8H8l-4 3v-6a8 8 0 0 1 8-9h1a8 8 0 0 1 8 4z"></path>
+                </svg>
+                Chat del gruppo
+              </button>
+            </div>
+
+            <section class="block" aria-labelledby="tracciato-title">
+              <h2 class="subhead" id="tracciato-title">Il tracciato</h2>
+              <svg class="route-hero route-hero--compact" viewBox="0 0 84 48" role="img" aria-label="Tracciato del percorso">
+                <g transform="translate(16 2) scale(0.52)">
+                  <path id="detail-path" d="" fill="none" stroke="#D85A30" stroke-width="3"
+                        stroke-linecap="round" stroke-dasharray="1 7"></path>
+                  <circle id="detail-start" cx="0" cy="0" r="5" fill="#1A2238"></circle>
+                  <circle id="detail-end" cx="0" cy="0" r="5" fill="#D85A30"></circle>
+                </g>
+              </svg>
+
+              <ol class="steps" id="detail-steps"></ol>
+            </section>
+
+            <section class="block" aria-labelledby="percorso-reviews-title">
+              <div class="section-head">
+                <h2 class="subhead" id="percorso-reviews-title">Recensioni</h2>
+                <p class="rating-summary" id="percorso-rating"></p>
+              </div>
+
+              <div class="reviews" id="percorso-reviews"></div>
+
+              <form class="form" id="percorso-review-form" hidden>
+                <div class="field">
+                  <span class="field__label" id="percorso-star-label">Il tuo voto</span>
+                  <div class="star-picker" role="group" aria-labelledby="percorso-star-label">
+                    <button class="star" type="button" data-percorso-star="1" aria-label="1 stella">★</button>
+                    <button class="star" type="button" data-percorso-star="2" aria-label="2 stelle">★</button>
+                    <button class="star" type="button" data-percorso-star="3" aria-label="3 stelle">★</button>
+                    <button class="star" type="button" data-percorso-star="4" aria-label="4 stelle">★</button>
+                    <button class="star" type="button" data-percorso-star="5" aria-label="5 stelle">★</button>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="percorso-review-text">La tua recensione</label>
+                  <textarea class="textarea" id="percorso-review-text" rows="3"
+                            placeholder="Com’è stato camminare con questo gruppo?" required></textarea>
+                </div>
+
+                <button class="btn btn--primary" type="submit">Pubblica recensione</button>
+              </form>
+
+              <button class="btn btn--outline btn--start" type="button" data-percorso-review>
+                <span id="percorso-review-label">Scrivi una recensione</span>
+              </button>
+            </section>
+
+            <button class="btn btn--primary btn--tall" type="button" data-see-uscite>
+              Vedi le uscite su questo percorso
+            </button>
+
+          </div>
+        </section>
+
+        <!-- ============================================================
+             USCITE IN GRUPPO
+             ============================================================ -->
+        <section class="screen" data-screen="gruppi" aria-labelledby="gruppi-title" hidden>
+          <div class="screen__inner">
+            <header class="block">
+              <h1 class="title-xl" id="gruppi-title">Uscite in gruppo</h1>
+              <p class="lead">Luogo pubblico, ora diurna, gruppi per interesse e fascia d’età.</p>
+            </header>
+
+            <div class="query-banner" id="query-banner" hidden>
+              <p>Ricerca: <b id="query-text"></b></p>
+              <button type="button" data-clear-q>Rimuovi</button>
+            </div>
+
+            <div class="chips" data-chips></div>
+
+            <p class="lead" id="joined-count"></p>
+
+            <h2 class="sr-only">Elenco delle uscite</h2>
+
+            <p class="empty" id="uscite-gruppi-empty" hidden>
+              Nessuna uscita per questo filtro. Prova un altro interesse.
+            </p>
+
+            <div class="stack-list" id="uscite-gruppi"></div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             DETTAGLIO USCITA
+             ============================================================ -->
+        <section class="screen" data-screen="uscita" aria-labelledby="uscita-title" hidden>
+          <div class="screen__inner">
+
+            <button class="back-link" type="button" data-go="gruppi" aria-label="Torna alle uscite">
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="#1A2238" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 6l-6 6 6 6"></path>
+              </svg>
+              Uscite
+            </button>
+
+            <figure class="place-media">
+              <img id="uscita-img" src="" alt="">
+              <figcaption class="place-media__date" id="uscita-date"></figcaption>
+            </figure>
+
+            <div class="detail-head">
+              <p class="badge" id="uscita-badge"></p>
+              <h1 class="title-lg" id="uscita-title"></h1>
+              <p class="detail-meta" id="uscita-meta"></p>
+            </div>
+
+            <div class="organizer">
+              <img class="organizer__avatar" id="uscita-org-img" src="" alt="">
+              <div class="organizer__text">
+                <span class="organizer__label">Proposto da</span>
+                <span class="organizer__name" id="uscita-org-name"></span>
+                <span class="organizer__role" id="uscita-org-role"></span>
+              </div>
+            </div>
+
+            <p class="detail-text" id="uscita-description"></p>
+
+            <dl class="facts">
+              <div class="facts__item">
+                <dt>Ritrovo</dt>
+                <dd id="uscita-ritrovo"></dd>
+              </div>
+              <div class="facts__item">
+                <dt>Posti liberi</dt>
+                <dd id="uscita-posti"></dd>
+              </div>
+            </dl>
+
+            <div class="actions-stack">
+              <button class="btn btn--primary btn--tall" type="button" id="uscita-join" data-join-uscita>
+                Unisciti all’uscita
+              </button>
+              <button class="btn btn--outline btn--tall" type="button" data-chat>
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 12a8 8 0 0 1-8 8H8l-4 3v-6a8 8 0 0 1 8-9h1a8 8 0 0 1 8 4z"></path>
+                </svg>
+                Partecipa alla chat
+              </button>
+            </div>
+
+            <section class="block" aria-labelledby="uscita-reviews-title">
+              <div class="section-head">
+                <h2 class="subhead" id="uscita-reviews-title">Recensioni</h2>
+                <p class="rating-summary" id="uscita-rating"></p>
+              </div>
+
+              <div class="reviews" id="uscita-reviews"></div>
+
+              <form class="form" id="uscita-review-form" hidden>
+                <div class="field">
+                  <span class="field__label" id="star-label">Il tuo voto</span>
+                  <div class="star-picker" role="group" aria-labelledby="star-label">
+                    <button class="star" type="button" data-star="1" aria-label="1 stella">★</button>
+                    <button class="star" type="button" data-star="2" aria-label="2 stelle">★</button>
+                    <button class="star" type="button" data-star="3" aria-label="3 stelle">★</button>
+                    <button class="star" type="button" data-star="4" aria-label="4 stelle">★</button>
+                    <button class="star" type="button" data-star="5" aria-label="5 stelle">★</button>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="uscita-review-text">La tua recensione</label>
+                  <textarea class="textarea" id="uscita-review-text" rows="3"
+                            placeholder="Com’è andata? Racconta il gruppo e il percorso." required></textarea>
+                </div>
+
+                <button class="btn btn--primary" type="submit">Pubblica recensione</button>
+              </form>
+
+              <button class="btn btn--outline btn--start" type="button" data-uscita-review>
+                <span id="uscita-review-label">Scrivi una recensione</span>
+              </button>
+            </section>
+
+          </div>
+        </section>
+
+        <!-- ============================================================
+             CHAT DELL'USCITA
+             ============================================================ -->
+        <section class="screen" data-screen="chat" aria-labelledby="chat-title" hidden>
+          <div class="screen__inner">
+
+            <button class="back-link" type="button" data-chat-back>
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="#1A2238" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 6l-6 6 6 6"></path>
+              </svg>
+              Indietro
+            </button>
+
+            <header class="chat-head">
+              <img class="chat-head__avatar" id="chat-avatar" src="" alt="">
+              <div class="chat-head__text">
+                <h1 class="chat-head__title" id="chat-title"></h1>
+                <p class="chat-head__sub" id="chat-sub"></p>
+              </div>
+            </header>
+
+            <div class="chat-thread" id="chat-thread" role="log"
+                 aria-live="polite" aria-label="Messaggi del gruppo"></div>
+
+            <div class="chat-gate" id="chat-gate" hidden>
+              <p id="chat-gate-text">Unisciti all’uscita per scrivere nel gruppo.</p>
+              <button class="btn btn--primary btn--sm" type="button" data-join-chat>Unisciti</button>
+            </div>
+
+            <form class="chat-form" id="chat-form">
+              <label class="sr-only" for="chat-input">Scrivi un messaggio</label>
+              <input class="input input--boxed" id="chat-input" type="text"
+                     autocomplete="off" placeholder="Scrivi un messaggio…">
+              <button class="btn btn--primary" type="submit">Invia</button>
+            </form>
+
+          </div>
+        </section>
+
+        <!-- ============================================================
+             MAPPA
+             ============================================================ -->
+        <section class="screen" data-screen="mappa" aria-labelledby="mappa-title" hidden>
+          <div class="screen__inner">
+            <h1 class="title-xl" id="mappa-title">Mappa</h1>
+
+            <svg class="map" viewBox="0 0 350 260" role="img"
+                 aria-label="Mappa illustrativa di Napoli con i punti delle realtà locali">
+              <path d="M0 190 C 60 170, 110 200, 170 180 S 290 150, 350 170 L 350 260 L 0 260 Z" fill="#BFD3DA"></path>
+              <path d="M30 40 C 90 20, 160 60, 210 40 S 320 30, 330 90 C 300 140, 220 120, 170 150 S 50 160, 30 120 Z" fill="#F1ECE2"></path>
+              <path d="M40 130 C 100 110, 150 140, 220 100" fill="none" stroke="#D9D2C5" stroke-width="6" stroke-linecap="round"></path>
+              <path d="M120 40 L 140 160" fill="none" stroke="#D9D2C5" stroke-width="6" stroke-linecap="round"></path>
+              <circle cx="110" cy="80" r="9" fill="#D85A30" stroke="#FFFFFF" stroke-width="3"></circle>
+              <circle cx="200" cy="70" r="9" fill="#1D7A6B" stroke="#FFFFFF" stroke-width="3"></circle>
+              <circle cx="250" cy="120" r="9" fill="#1A2238" stroke="#FFFFFF" stroke-width="3"></circle>
+              <circle cx="70" cy="150" r="9" fill="#D85A30" stroke="#FFFFFF" stroke-width="3"></circle>
+            </svg>
+
+            <p class="map-note">Mappa illustrativa: nell’app sarà una mappa reale con i punti geolocalizzati.</p>
+
+            <h2 class="subhead">Realtà locali vicino a te</h2>
+            <div class="list" id="realta-mappa"></div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             PROFILO
+             ============================================================ -->
+        <section class="screen" data-screen="profilo" aria-labelledby="profilo-title" hidden>
+          <div class="screen__inner">
+
+            <header class="profile-head">
+              <span class="avatar" aria-hidden="true">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+                     stroke="#FAF8F3" stroke-width="1.8" stroke-linecap="round">
+                  <circle cx="12" cy="8" r="4"></circle>
+                  <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path>
+                </svg>
+              </span>
+              <span class="profile-id">
+                <span class="profile-name" id="profilo-title">Il tuo nome</span>
+                <span class="profile-sub">Napoli · Materdei</span>
+              </span>
+            </header>
+
+            <!-- Verifica del profilo: serve per proporre tappe e percorsi -->
+            <section class="verify-card" id="profilo-verify" aria-labelledby="verify-title">
+              <div class="verify-card__head">
+                <span class="verify-card__icon" id="verify-icon" aria-hidden="true">!</span>
+                <div class="verify-card__text">
+                  <h2 class="verify-card__title" id="verify-title">Profilo non verificato</h2>
+                  <p class="verify-card__desc" id="verify-desc">
+                    Per proporre una tappa, un percorso, un gruppo o un’attività serve un profilo verificato:
+                    così le guide e i gruppi sanno chi propone.
+                  </p>
+                </div>
+              </div>
+              <button class="btn btn--primary btn--tall" type="button" id="verify-btn" data-verify>
+                Verifica il profilo (demo)
+              </button>
+            </section>
+
+            <section class="block" aria-labelledby="joined-title">
+              <h2 class="subhead" id="joined-title">Le tue uscite (<span id="joined-title-count">0</span>)</h2>
+
+              <div class="empty-box" id="joined-empty">
+                <p>Non sei ancora iscritto a nessuna uscita.</p>
+                <button class="btn btn--primary btn--sm" type="button" data-go="gruppi">Trova un’uscita</button>
+              </div>
+
+              <div class="stack-list stack-list--tight" id="joined-list"></div>
+            </section>
+
+            <section class="block" aria-labelledby="joined-percorsi-title">
+              <h2 class="subhead" id="joined-percorsi-title">I tuoi percorsi (<span id="joined-percorsi-count">0</span>)</h2>
+
+              <div class="empty-box" id="joined-percorsi-empty">
+                <p>Non hai ancora scelto un percorso. I gruppi sono divisi per età e interessi.</p>
+                <button class="btn btn--primary btn--sm" type="button" data-go="percorsi">Esplora i percorsi</button>
+              </div>
+
+              <div class="stack-list stack-list--tight" id="joined-percorsi-list"></div>
+            </section>
+
+            <button class="btn btn--dark btn--tall" type="button" data-go="proponi">Proponi qualcosa</button>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             PROPONI QUALCOSA (tappa, percorso, gruppo o attività)
+             ============================================================ -->
+        <section class="screen" data-screen="proponi" aria-labelledby="proponi-title" hidden>
+          <div class="screen__inner">
+
+            <button class="back-link" type="button" data-go="home">
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="#1A2238" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 6l-6 6 6 6"></path>
+              </svg>
+              Indietro
+            </button>
+
+            <header class="block">
+              <h1 class="title-lg" id="proponi-title">Proponi qualcosa</h1>
+              <p class="lead">Puoi aggiungere un luogo, costruire un percorso, organizzare un gruppo
+                o proporre un’attività a una guida già verificata.</p>
+            </header>
+
+            <!-- Blocco mostrato a chi non ha ancora verificato il profilo -->
+            <div class="gate-card" id="proponi-gate">
+              <span class="gate-card__badge">Solo profili verificati</span>
+              <h2 class="gate-card__title">Prima facci sapere chi sei</h2>
+              <p class="gate-card__text">
+                Chi propone una tappa, un gruppo o un’attività la accompagna di persona:
+                per questo chiediamo una verifica del profilo prima di pubblicare.
+              </p>
+              <ul class="gate-card__list">
+                <li>Un documento d’identità, controllato una sola volta</li>
+                <li>Un numero di telefono confermato</li>
+                <li>Un profilo pubblico con nome e zona</li>
+              </ul>
+              <button class="btn btn--primary btn--tall" type="button" data-verify>
+                Verifica il profilo (demo)
+              </button>
+              <button class="btn btn--outline btn--tall" type="button" data-go="profilo">
+                Vai al profilo
+              </button>
+            </div>
+
+            <p class="verified-note" id="proponi-verified" hidden>
+              ✓ Profilo verificato · puoi inviare una proposta
+            </p>
+
+            <!-- Scelta del tipo di proposta -->
+            <section class="block" id="proponi-types" aria-labelledby="proponi-types-title" hidden>
+              <h2 class="subhead" id="proponi-types-title">Cosa vuoi proporre?</h2>
+
+              <div class="proposal-types" role="group" aria-labelledby="proponi-types-title">
+                <button class="proposal-type is-active" type="button" data-proposal="tappa" aria-pressed="true">
+                  <span class="proposal-type__icon" aria-hidden="true">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path>
+                      <circle cx="12" cy="9.5" r="2.5"></circle>
+                    </svg>
+                  </span>
+                  <span class="proposal-type__title">Una tappa</span>
+                  <span class="proposal-type__meta">Un luogo da aggiungere</span>
+                </button>
+
+                <button class="proposal-type" type="button" data-proposal="percorso" aria-pressed="false">
+                  <span class="proposal-type__icon" aria-hidden="true">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 19c4-1 3-6 8-7s4-6 8-7"></path>
+                      <circle cx="4" cy="19" r="1.5"></circle>
+                      <circle cx="20" cy="5" r="1.5"></circle>
+                    </svg>
+                  </span>
+                  <span class="proposal-type__title">Un percorso</span>
+                  <span class="proposal-type__meta">Più tappe da collegare</span>
+                </button>
+
+                <button class="proposal-type" type="button" data-proposal="gruppo" aria-pressed="false">
+                  <span class="proposal-type__icon" aria-hidden="true">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="9" cy="8" r="3.5"></circle>
+                      <circle cx="17" cy="9" r="2.5"></circle>
+                      <path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"></path>
+                      <path d="M15 14.5c3 0 6 2 6 5.5"></path>
+                    </svg>
+                  </span>
+                  <span class="proposal-type__title">Un gruppo</span>
+                  <span class="proposal-type__meta">Un’uscita da organizzare</span>
+                </button>
+
+                <button class="proposal-type" type="button" data-proposal="attivita" aria-pressed="false">
+                  <span class="proposal-type__icon" aria-hidden="true">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 3l2.2 5.3L19 10l-4.8 1.7L12 17l-2.2-5.3L5 10l4.8-1.7z"></path>
+                      <path d="M19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9z"></path>
+                    </svg>
+                  </span>
+                  <span class="proposal-type__title">Un’attività</span>
+                  <span class="proposal-type__meta">Per una guida verificata</span>
+                </button>
+              </div>
+            </section>
+
+            <form class="form" id="proponi-form" hidden>
+              <!-- Solo per le attività: scelta della guida verificata -->
+              <div class="field" id="proponi-guida-field" hidden>
+                <label class="field__label" for="proponi-guida">A quale guida verificata vuoi proporla?</label>
+                <select class="select" id="proponi-guida"></select>
+              </div>
+
+              <div class="guide-preview" id="proponi-guida-preview" hidden>
+                <img class="guide-preview__img" id="guida-preview-img" alt="">
+                <div class="guide-preview__text">
+                  <span class="guide-preview__badge">✓ Guida verificata</span>
+                  <p class="guide-preview__name" id="guida-preview-name"></p>
+                  <p class="guide-preview__role" id="guida-preview-role"></p>
+                  <p class="guide-preview__interests" id="guida-preview-interests"></p>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="proponi-nome" id="proponi-nome-label">Nome del posto</label>
+                <input class="input input--boxed" id="proponi-nome" type="text"
+                       placeholder="Es. Palazzo dello Spagnolo" required>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="proponi-quartiere" id="proponi-quartiere-label">Quartiere</label>
+                <input class="input input--boxed" id="proponi-quartiere" type="text"
+                       placeholder="Es. Sanità" required>
+              </div>
+
+              <div class="field" id="proponi-data-field" hidden>
+                <label class="field__label" for="proponi-data">Data o periodo</label>
+                <input class="input input--boxed" id="proponi-data" type="text"
+                       placeholder="Es. sabato 13 dicembre, mattina">
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="proponi-descrizione" id="proponi-descrizione-label">
+                  Perché merita di essere camminato
+                </label>
+                <textarea class="textarea" id="proponi-descrizione" rows="4"
+                          placeholder="Racconta il luogo e perché vorresti farlo conoscere."
+                          required></textarea>
+              </div>
+
+              <p class="proposal-hint" id="proponi-hint"></p>
+
+              <button class="btn btn--primary btn--tall" type="submit" id="proponi-submit">
+                Invia proposta
+              </button>
+            </form>
+
+            <div class="notice" id="proponi-success" hidden>
+              <p class="notice__title" id="proponi-success-title">Grazie! La tua proposta è arrivata.</p>
+              <p class="notice__text" id="proponi-success-text">
+                La squadra di mapping la verifica sul posto prima di pubblicarla.
+              </p>
+              <div class="notice__actions">
+                <button class="btn btn--pine btn--sm" type="button" data-new-proposal>
+                  Proponi un’altra cosa
+                </button>
+                <button class="btn btn--outline btn--sm" type="button" data-go="home">Torna alla home</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ============================================================
+         BARRA DI NAVIGAZIONE (fissa in basso)
+         ============================================================ -->
+    <nav class="bottom-nav" aria-label="Navigazione principale">
+      <button class="nav-item" type="button" data-go="home" data-tab="home">
+        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 11l9-7 9 7v9H3z"></path>
+        </svg>
+        Home
+      </button>
+
+      <button class="nav-item" type="button" data-go="percorsi" data-tab="percorsi">
+        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 19c4-1 3-6 8-7s4-6 8-7"></path>
+          <circle cx="4" cy="19" r="1.5"></circle>
+          <circle cx="20" cy="5" r="1.5"></circle>
+        </svg>
+        Percorsi
+      </button>
+
+      <button class="nav-item" type="button" data-go="gruppi" data-tab="gruppi">
+        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="8" r="3.5"></circle>
+          <circle cx="17" cy="9" r="2.5"></circle>
+          <path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"></path>
+          <path d="M15 14.5c3 0 6 2 6 5.5"></path>
+        </svg>
+        Gruppi
+      </button>
+
+      <button class="nav-item" type="button" data-go="mappa" data-tab="mappa">
+        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"></path>
+          <path d="M9 4v14M15 6v14"></path>
+        </svg>
+        Mappa
+      </button>
+
+      <button class="nav-item" type="button" data-go="profilo" data-tab="profilo">
+        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path>
+        </svg>
+        Profilo
+      </button>
+    </nav>
+
+    <!-- Messaggio temporaneo per le azioni dimostrative -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <!-- Dati modificabili + logica dell'app -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

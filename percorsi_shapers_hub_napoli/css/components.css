@@ -1,0 +1,1400 @@
+/* ==========================================================================
+   components.css
+   Pezzi riutilizzabili: bottoni, campi, chip, card, liste, navigazione.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Bottoni
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #FFFFFF;
+  border-radius: 14px;
+}
+
+.btn--dark {
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 14px;
+}
+
+.btn--peach {
+  align-self: flex-start;
+  background: var(--peach);
+  color: var(--peach-ink);
+}
+
+.btn--pine {
+  background: var(--pine);
+  color: #FFFFFF;
+}
+
+.btn--outline {
+  background: var(--surface);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.btn--sm {
+  height: 44px;
+  font-size: 14px;
+}
+
+.btn--tall {
+  width: 100%;
+  height: 52px;
+  font-size: 15px;
+}
+
+.btn--start {
+  align-self: flex-start;
+}
+
+/* Bottone "Unisciti" / "Iscritto" dentro le card */
+.btn--join {
+  flex: 0 0 auto;
+  background: var(--accent);
+  color: #FFFFFF;
+  border: 0;
+}
+
+.btn--join.is-joined {
+  background: var(--mint);
+  color: var(--pine);
+  border: 1px solid var(--mint-line);
+}
+
+/* Link testuali ("Vedi tutte", "Esplora"…) */
+.link-more {
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.link-more:hover {
+  color: #7A2E14;
+}
+
+.back-link {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.city-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Campi di ricerca e form
+   -------------------------------------------------------------------------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.input {
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+/* Dentro il campo di ricerca l'input occupa tutto lo spazio disponibile */
+.input-wrap .input {
+  flex: 1;
+}
+
+.input::placeholder {
+  color: #7B8494;
+}
+
+.input--boxed {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  font-size: 15px;
+  resize: vertical;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Chip dei filtri
+   -------------------------------------------------------------------------- */
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 -20px;
+  padding: 0 20px;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chip.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+/* --------------------------------------------------------------------------
+   Card
+   -------------------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* Card di un'uscita (versione orizzontale della home) */
+.card--uscita {
+  flex: 0 0 272px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.card--uscita:hover {
+  border-color: #CFC6B6;
+}
+
+/* Variante a tutta larghezza usata nella schermata Gruppi */
+.card--uscita.is-wide {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+/* Foto del luogo, in cima alla card */
+.card__media {
+  width: 100%;
+  height: 118px;
+  object-fit: cover;
+  background: var(--sand);
+}
+
+.card--uscita.is-wide .card__media {
+  height: 158px;
+}
+
+/* Testi della card, sotto la foto */
+.card__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 16px;
+}
+
+/* Il titolo è un bottone: porta al dettaglio dell'uscita */
+.card__title-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.card__title-btn:hover {
+  color: var(--accent);
+}
+
+.card__organizer {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.card__title {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.card__meta {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.card__small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* Etichetta della data */
+.date-pill {
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.date-pill--brick {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.date-pill--pine {
+  background: var(--mint);
+  color: var(--pine);
+}
+
+/* Card cliccabile di un percorso */
+.card--percorso {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+}
+
+.card--percorso:hover {
+  border-color: #CFC6B6;
+}
+
+/* Contenitore della foto con il tracciato sovrapposto */
+.card__media-wrap {
+  position: relative;
+  display: block;
+  background: var(--sand);
+}
+
+.card__media--percorso {
+  height: 150px;
+}
+
+.route-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 56px;
+  height: 56px;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(26, 34, 56, 0.72);
+}
+
+.card--percorso .card__content {
+  gap: 8px;
+  padding: 14px 16px 16px;
+}
+
+.card__rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.card__body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card--percorso .card__title {
+  font-size: 17px;
+}
+
+.card--percorso .card__meta {
+  font-size: 13px;
+}
+
+/* Miniatura del tracciato */
+.route-thumb {
+  flex: 0 0 84px;
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  background: var(--sand);
+}
+
+/* Badge verde "Fuori dal centro" */
+.badge {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--mint);
+  color: var(--pine);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Liste (realtà locali, uscite iscritte…)
+   -------------------------------------------------------------------------- */
+.list {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.list-row:last-child {
+  border-bottom: 0;
+}
+
+.list-row__dot {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+}
+
+.list-row__text {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.list-row__name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.list-row__meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.list-row__action {
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.contact {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Contenitori di card impilate */
+.stack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stack-list--tight {
+  gap: 12px;
+}
+
+/* Contenitore di card orizzontali (scroll laterale) */
+.hscroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  margin: 0 -20px;
+  padding: 0 20px 4px;
+  scrollbar-width: none;
+}
+
+.hscroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Messaggio "nessun risultato" */
+.empty {
+  padding: 20px;
+  background: var(--surface);
+  border: 1px dashed var(--dashed);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Riquadro con testo + bottone (profilo vuoto) */
+.empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px dashed var(--dashed);
+  border-radius: var(--radius);
+}
+
+.empty-box p {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Intestazioni di sezione e blocchi
+   -------------------------------------------------------------------------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-head h2 {
+  font-size: 21px;
+}
+
+/* --------------------------------------------------------------------------
+   Banner della ricerca attiva
+   -------------------------------------------------------------------------- */
+.query-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 6px 6px 14px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+}
+
+.query-banner p {
+  font-size: 14px;
+  color: var(--accent-ink);
+}
+
+.query-banner button {
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--accent-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Blocco scuro "Proponi una tappa"
+   -------------------------------------------------------------------------- */
+.cta-dark {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--ink);
+}
+
+.cta-dark h2 {
+  font-size: 20px;
+  line-height: 1.25;
+  color: var(--bg);
+}
+
+.cta-dark p {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #D6D2C8;
+}
+
+/* --------------------------------------------------------------------------
+   Avatar e profilo
+   -------------------------------------------------------------------------- */
+.avatar {
+  display: flex;
+  flex: 0 0 64px;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   Dettaglio di un'uscita
+   -------------------------------------------------------------------------- */
+/* Foto grande del luogo, con la data sovrapposta in basso */
+.place-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--sand);
+}
+
+.place-media img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.place-media__date {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(250, 248, 243, 0.95);
+  color: var(--accent-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Riga "Proposto da …" */
+.organizer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.organizer__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--sand);
+}
+
+.organizer__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.organizer__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.organizer__name {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.organizer__role {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Ritrovo e posti liberi */
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.facts__item {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--sand);
+}
+
+.facts dt {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* Etichette di interessi/età */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Bottoni "Unisciti" + "Partecipa alla chat" */
+.actions-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   Recensioni
+   -------------------------------------------------------------------------- */
+.rating-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.rating-summary__star {
+  color: var(--accent);
+}
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.review-item__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-item__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--sand);
+}
+
+.review-item__avatar--initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-head);
+  font-size: 16px;
+}
+
+.review-item__who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.review-item__name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.review-item__text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.review-photos {
+  display: flex;
+  gap: 8px;
+}
+
+.review-photos img {
+  width: 104px;
+  height: 78px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--sand);
+}
+
+/* Stelle di sola lettura */
+.stars {
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #D8CFC1;
+}
+
+.stars .is-on {
+  color: var(--accent);
+}
+
+/* Stelle cliccabili nel form */
+.star-picker {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: #D8CFC1;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.star.is-on {
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Chat dell'uscita
+   -------------------------------------------------------------------------- */
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chat-head__avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--sand);
+}
+
+.chat-head__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-head__title {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.chat-head__sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.chat-thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 180px;
+  overflow-y: auto;
+  padding: 4px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.chat-thread::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-thread::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.chat-thread::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.bubble__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--sand);
+}
+
+.bubble__body {
+  display: flex;
+  max-width: 78%;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px 14px 14px 4px;
+  background: var(--surface);
+}
+
+.bubble__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.bubble__text {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.bubble__time {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.bubble--mine {
+  align-self: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  max-width: 78%;
+  padding: 10px 12px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--accent-soft);
+}
+
+.bubble--mine .bubble__text {
+  color: var(--accent-ink);
+}
+
+.bubble--mine .bubble__time {
+  color: var(--accent-ink);
+  opacity: 0.7;
+}
+
+.chat-form {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-form .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-form .btn {
+  flex: 0 0 auto;
+  height: 48px;
+}
+
+/* Invito a iscriversi per scrivere nella chat */
+.chat-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+}
+
+.chat-gate p {
+  font-size: 14px;
+  color: var(--accent-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Verifica del profilo
+   -------------------------------------------------------------------------- */
+.verify-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.verify-card.is-verified {
+  border-color: var(--mint-line);
+  background: var(--mint);
+}
+
+.verify-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.verify-card__icon {
+  display: flex;
+  flex: 0 0 36px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.verify-card.is-verified .verify-card__icon {
+  background: var(--pine);
+  color: #FFFFFF;
+}
+
+.verify-card__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.verify-card__title {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.verify-card.is-verified .verify-card__title {
+  color: var(--pine);
+}
+
+.verify-card__desc {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.verify-card.is-verified .verify-card__desc {
+  color: var(--pine);
+}
+
+/* Blocco che spiega perché serve la verifica prima di proporre */
+.gate-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px dashed var(--dashed);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.gate-card__badge {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gate-card__title {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.gate-card__text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.gate-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.gate-card__list li::marker {
+  color: var(--accent);
+}
+
+/* Conferma mostrata sopra il form a chi è verificato */
+.verified-note {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--mint);
+  color: var(--pine);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Scelta del tipo di proposta (tappa, percorso, gruppo, attività)
+   -------------------------------------------------------------------------- */
+.proposal-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.proposal-type {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: left;
+}
+
+.proposal-type.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.proposal-type__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 4px;
+  border-radius: 999px;
+  background: var(--sand);
+  color: var(--ink);
+}
+
+.proposal-type.is-active .proposal-type__icon {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+
+.proposal-type__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.proposal-type.is-active .proposal-type__title {
+  color: var(--accent-ink);
+}
+
+.proposal-type__meta {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.proposal-type.is-active .proposal-type__meta {
+  color: var(--accent-ink);
+}
+
+/* Tendina delle guide verificate */
+.select {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 15px;
+}
+
+/* Scheda della guida scelta */
+.guide-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--mint-line);
+  border-radius: 14px;
+  background: var(--mint);
+}
+
+.guide-preview__img {
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--sand);
+}
+
+.guide-preview__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.guide-preview__badge {
+  align-self: flex-start;
+  margin-bottom: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--pine);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.guide-preview__name {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--pine);
+}
+
+.guide-preview__role,
+.guide-preview__interests {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--pine);
+}
+
+/* Nota che spiega cosa succede dopo l'invio */
+.proposal-hint {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--sand);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Messaggio di conferma (proposta inviata)
+   -------------------------------------------------------------------------- */
+.notice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--mint);
+}
+
+.notice__title {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--pine);
+}
+
+.notice__text {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--pine);
+}
+
+.notice__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Navigazione in basso
+   -------------------------------------------------------------------------- */
+.bottom-nav {
+  flex: 0 0 var(--nav-h);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  height: var(--nav-h);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nav-item.is-active {
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Toast: piccolo messaggio temporaneo
+   -------------------------------------------------------------------------- */
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--nav-h) + 16px);
+  z-index: 20;
+  max-width: calc(100% - 40px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
