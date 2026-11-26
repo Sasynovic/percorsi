@@ -428,16 +428,35 @@ button.zone-item:hover {
 /* --------------------------------------------------------------------------
    Profilo
    -------------------------------------------------------------------------- */
-.profile-head {
+/* Intestazione con foto, nome e descrizione */
+.profile-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-hero__top {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
+.profile-photo {
+  flex: 0 0 84px;
+  width: 84px;
+  height: 84px;
+  border: 3px solid var(--surface);
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--sand);
+  box-shadow: 0 0 0 2px var(--peach);
+}
+
 .profile-id {
   display: flex;
+  min-width: 0;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .profile-name {
@@ -447,39 +466,101 @@ button.zone-item:hover {
   line-height: 1.2;
 }
 
+.profile-job {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
 .profile-sub {
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.4;
   color: var(--muted);
+}
+
+.profile-verified {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--mint);
+  color: var(--pine);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profile-bio {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* Tre numeri in riga */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 2px;
+  padding: 14px 6px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.profile-stat dd {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--accent);
+}
+
+.profile-stat dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.tags--profile .tag {
+  padding: 6px 12px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 13px;
 }
 
 .screen[data-screen="profilo"] .block {
   gap: 12px;
 }
 
-/* Riga di un'uscita prenotata */
-.joined-card {
+/* Una recensione scritta dal profilo */
+.my-review {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--surface);
 }
 
-.joined-card__date {
-  font-size: 13px;
+.my-review__kicker {
+  font-size: 12px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--pine);
 }
 
-.joined-card__title {
-  font-size: 15px;
-  font-weight: 600;
+.my-review__title {
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.joined-card__meta {
-  font-size: 13px;
+.my-review__text {
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--muted);
 }
 

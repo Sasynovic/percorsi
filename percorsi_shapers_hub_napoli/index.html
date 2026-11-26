@@ -161,13 +161,12 @@
               <p class="badge" data-detail="badge">Fuori dal centro</p>
               <h1 class="title-lg" id="detail-title" data-detail="name"></h1>
               <p class="detail-meta" data-detail="meta"></p>
-              <div class="tags" id="percorso-tags"></div>
             </div>
 
             <div class="organizer">
               <img class="organizer__avatar" id="percorso-guida-img" src="" alt="">
               <div class="organizer__text">
-                <span class="organizer__label">Accompagnato da</span>
+                <span class="organizer__label">Proposto da</span>
                 <span class="organizer__name" id="percorso-guida-name"></span>
                 <span class="organizer__role" id="percorso-guida-role"></span>
               </div>
@@ -175,7 +174,18 @@
 
             <p class="detail-text" data-detail="description"></p>
 
-            <dl class="facts facts--quad">
+            <!-- A chi è consigliato: passioni e età di chi l'ha già fatto -->
+            <section class="suggest" aria-labelledby="percorso-suggest-title">
+              <h2 class="suggest__title" id="percorso-suggest-title">Passioni consigliate</h2>
+              <div class="tags" id="percorso-passioni"></div>
+              <p class="suggest__age">
+                <span class="suggest__age-label">Età consigliata</span>
+                <span class="suggest__age-value" data-detail="eta"></span>
+                <span class="suggest__age-note" data-detail="eta-note"></span>
+              </p>
+            </section>
+
+            <dl class="facts">
               <div class="facts__item">
                 <dt>Distanza</dt>
                 <dd data-detail="km"></dd>
@@ -184,28 +194,15 @@
                 <dt>Durata</dt>
                 <dd data-detail="durata"></dd>
               </div>
-              <div class="facts__item">
-                <dt>Età</dt>
-                <dd data-detail="eta"></dd>
-              </div>
-              <div class="facts__item">
-                <dt>Nel gruppo</dt>
-                <dd data-detail="partecipanti"></dd>
-              </div>
             </dl>
 
-            <div class="actions-stack">
-              <button class="btn btn--primary btn--tall" type="button" id="percorso-join" data-join-percorso>
-                Unisciti al gruppo
-              </button>
-              <button class="btn btn--outline btn--tall" type="button" data-chat-percorso>
-                <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M21 12a8 8 0 0 1-8 8H8l-4 3v-6a8 8 0 0 1 8-9h1a8 8 0 0 1 8 4z"></path>
-                </svg>
-                Chat del gruppo
-              </button>
-            </div>
+            <button class="btn btn--primary btn--tall" type="button" data-chat-percorso>
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12a8 8 0 0 1-8 8H8l-4 3v-6a8 8 0 0 1 8-9h1a8 8 0 0 1 8 4z"></path>
+              </svg>
+              Chat del percorso
+            </button>
 
             <section class="block" aria-labelledby="tracciato-title">
               <h2 class="subhead" id="tracciato-title">Il tracciato</h2>
@@ -244,7 +241,7 @@
                 <div class="field">
                   <label class="field__label" for="percorso-review-text">La tua recensione</label>
                   <textarea class="textarea" id="percorso-review-text" rows="3"
-                            placeholder="Com’è stato camminare con questo gruppo?" required></textarea>
+                            placeholder="Com’è stato fare questo percorso?" required></textarea>
                 </div>
 
                 <button class="btn btn--primary" type="submit">Pubblica recensione</button>
@@ -326,6 +323,11 @@
             </div>
 
             <p class="detail-text" id="uscita-description"></p>
+
+            <section class="suggest" aria-labelledby="uscita-suggest-title">
+              <h2 class="suggest__title" id="uscita-suggest-title">Passioni consigliate</h2>
+              <div class="tags" id="uscita-passioni"></div>
+            </section>
 
             <dl class="facts">
               <div class="facts__item">
@@ -411,7 +413,7 @@
             </header>
 
             <div class="chat-thread" id="chat-thread" role="log"
-                 aria-live="polite" aria-label="Messaggi del gruppo"></div>
+                 aria-live="polite" aria-label="Messaggi della chat"></div>
 
             <div class="chat-gate" id="chat-gate" hidden>
               <p id="chat-gate-text">Unisciti all’uscita per scrivere nel gruppo.</p>
@@ -530,19 +532,40 @@
         <section class="screen" data-screen="profilo" aria-labelledby="profilo-title" hidden>
           <div class="screen__inner">
 
-            <header class="profile-head">
-              <span class="avatar" aria-hidden="true">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
-                     stroke="#FAF8F3" stroke-width="1.8" stroke-linecap="round">
-                  <circle cx="12" cy="8" r="4"></circle>
-                  <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path>
-                </svg>
-              </span>
-              <span class="profile-id">
-                <span class="profile-name" id="profilo-title">Il tuo nome</span>
-                <span class="profile-sub">Napoli · Materdei</span>
-              </span>
+            <!-- Intestazione: foto, nome, età, professione -->
+            <header class="profile-hero">
+              <div class="profile-hero__top">
+                <img class="profile-photo" id="profilo-foto" src="" alt="">
+                <div class="profile-id">
+                  <h1 class="profile-name" id="profilo-title"></h1>
+                  <p class="profile-job" id="profilo-job"></p>
+                  <p class="profile-sub" id="profilo-sub"></p>
+                </div>
+              </div>
+              <span class="profile-verified" id="profilo-badge" hidden>✓ Profilo verificato</span>
+              <p class="profile-bio" id="profilo-bio"></p>
             </header>
+
+            <!-- Numeri del profilo -->
+            <dl class="profile-stats">
+              <div class="profile-stat">
+                <dt>Uscite fatte</dt>
+                <dd id="stat-uscite"></dd>
+              </div>
+              <div class="profile-stat">
+                <dt>Recensioni</dt>
+                <dd id="stat-recensioni"></dd>
+              </div>
+              <div class="profile-stat">
+                <dt>Quartieri</dt>
+                <dd id="stat-quartieri"></dd>
+              </div>
+            </dl>
+
+            <section class="block" aria-labelledby="profilo-passioni-title">
+              <h2 class="subhead" id="profilo-passioni-title">Le mie passioni</h2>
+              <div class="tags tags--profile" id="profilo-passioni"></div>
+            </section>
 
             <!-- Verifica del profilo: serve per proporre tappe e percorsi -->
             <section class="verify-card" id="profilo-verify" aria-labelledby="verify-title">
@@ -562,7 +585,7 @@
             </section>
 
             <section class="block" aria-labelledby="joined-title">
-              <h2 class="subhead" id="joined-title">Le tue uscite (<span id="joined-title-count">0</span>)</h2>
+              <h2 class="subhead" id="joined-title">Uscite prenotate (<span id="joined-title-count">0</span>)</h2>
 
               <div class="empty-box" id="joined-empty">
                 <p>Non sei ancora iscritto a nessuna uscita.</p>
@@ -572,15 +595,14 @@
               <div class="stack-list stack-list--tight" id="joined-list"></div>
             </section>
 
-            <section class="block" aria-labelledby="joined-percorsi-title">
-              <h2 class="subhead" id="joined-percorsi-title">I tuoi percorsi (<span id="joined-percorsi-count">0</span>)</h2>
+            <section class="block" aria-labelledby="past-title">
+              <h2 class="subhead" id="past-title">Uscite fatte (<span id="past-count">0</span>)</h2>
+              <div class="stack-list stack-list--tight" id="past-list"></div>
+            </section>
 
-              <div class="empty-box" id="joined-percorsi-empty">
-                <p>Non hai ancora scelto un percorso. I gruppi sono divisi per età e interessi.</p>
-                <button class="btn btn--primary btn--sm" type="button" data-go="percorsi">Esplora i percorsi</button>
-              </div>
-
-              <div class="stack-list stack-list--tight" id="joined-percorsi-list"></div>
+            <section class="block" aria-labelledby="my-reviews-title">
+              <h2 class="subhead" id="my-reviews-title">Le tue recensioni (<span id="my-reviews-count">0</span>)</h2>
+              <div class="stack-list stack-list--tight" id="my-reviews"></div>
             </section>
 
             <button class="btn btn--dark btn--tall" type="button" data-go="proponi">Proponi qualcosa</button>

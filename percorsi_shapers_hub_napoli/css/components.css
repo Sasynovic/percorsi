@@ -744,7 +744,7 @@
   line-height: 1.35;
 }
 
-/* Etichette di interessi/età */
+/* Etichette delle passioni */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -759,6 +759,77 @@
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
+}
+
+/* Riquadro "Passioni consigliate" (+ età consigliata nei percorsi) */
+.suggest {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--mint-line);
+  border-radius: var(--radius);
+  background: var(--mint);
+}
+
+.suggest__title {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--pine);
+}
+
+.suggest .tag {
+  padding: 6px 12px;
+  background: var(--surface);
+  color: var(--pine);
+  font-size: 13px;
+}
+
+.suggest__age {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 10px;
+  row-gap: 2px;
+  padding-top: 10px;
+  border-top: 1px solid var(--mint-line);
+}
+
+.suggest__age-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pine);
+}
+
+.suggest__age-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.suggest__age-note {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Riga "Per chi ama …" nelle card di percorsi e uscite */
+.card__passions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pine);
+}
+
+.card__passions-label {
+  font-weight: 400;
+  color: var(--muted);
 }
 
 /* Bottoni "Unisciti" + "Partecipa alla chat" */

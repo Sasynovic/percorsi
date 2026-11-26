@@ -8,7 +8,6 @@
 
 /* Chiavi usate per ricordare scelte e verifica nel browser */
 const STORAGE_KEY = 'percorsi_shapers_hub_napoli:joined';
-const PERCORSI_KEY = 'percorsi_shapers_hub_napoli:percorsi';
 const VERIFY_KEY = 'percorsi_shapers_hub_napoli:verified';
 
 /* Stato dell'app: tutto ciò che cambia mentre la si usa */
@@ -17,11 +16,10 @@ const state = {
   filter: 'tutte',     // filtro attivo (id di CHIPS)
   q: '',               // testo di ricerca
   joined: loadJoined(STORAGE_KEY),          // uscite: { u1: true, ... }
-  joinedPercorsi: loadJoined(PERCORSI_KEY), // percorsi: { p1: true, ... }
   verified: loadVerified(),                 // profilo verificato?
   percorso: 'p1',      // percorso aperto nel dettaglio
   uscita: 'u1',        // uscita aperta nel dettaglio
-  chatType: 'uscita',  // a quale gruppo appartiene la chat aperta
+  chatType: 'uscita',  // chat aperta: di un'uscita o di un percorso
   stars: 5,            // voto scelto nel form recensione dell'uscita
   percorsoStars: 5,    // voto scelto nel form recensione del percorso
   reviewOpen: false,   // (non più usato, mantenuto per compatibilità)
@@ -171,6 +169,27 @@ function reviewsOfPercorso(percorso) {
   return (state.newPercorsoReviews[percorso.id] || []).concat(percorso.recensioni);
 }
 
+/* Età consigliata di un percorso, ricavata dall'età di chi l'ha già fatto:
+   si scarta il 15% più giovane e il 15% più anziano e si mostra la fascia
+   in cui sta la maggior parte delle persone (es. "26-39 anni") */
+function etaConsigliata(percorso) {
+  const eta = (percorso.etaPassate || []).slice().sort((a, b) => a - b);
+  if (!eta.length) return { fascia: 'Tutte le età', persone: 0 };
+
+  const percentile = (p) => eta[Math.round(p * (eta.length - 1))];
+  const da = percentile(0.15);
+  const a = percentile(0.85);
+
+  return {
+    fascia: da === a ? `${da} anni` : `${da}-${a} anni`,
+    persone: eta.length
+  };
+}
+
+function passioniHtml(passioni) {
+  return (passioni || []).map((p) => `<span class="tag">${p}</span>`).join('');
+}
+
 /* Cinque stelle: quelle piene sono terracotta, le vuote grigie */
 function starsHtml(stelle) {
   const stelle5 = Array.from({ length: 5 }, (_, i) => {
@@ -261,6 +280,10 @@ function uscitaCard(uscita, wide) {
 
         <p class="card__meta">${uscita.meta}</p>
         <p class="card__organizer">con ${uscita.organizzatore.nome} ${uscita.organizzatore.cognome}</p>
+        <p class="card__passions">
+          <span class="card__passions-label">Per chi ama</span>
+          ${uscita.passioni.join(' · ')}
+        </p>
 
         <div class="card__footer">
           <p class="card__small">${posti} posti liberi</p>
@@ -296,7 +319,11 @@ function percorsoCard(percorso, showBadge) {
           <span class="rating-summary">
             ${ratingSummaryHtml(recensioni)}
           </span>
-          <span class="card__small">${percorso.partecipanti} nel gruppo · ${percorso.eta}</span>
+          <span class="card__small">Età consigliata ${etaConsigliata(percorso).fascia}</span>
+        </span>
+        <span class="card__passions">
+          <span class="card__passions-label">Per chi ama</span>
+          ${percorso.passioni.join(' · ')}
         </span>
       </span>
     </button>`;
@@ -559,8 +586,8 @@ function renderRealta() {
 
 function renderDetail() {
   const percorso = selectedPercorso();
-  const joined = Boolean(state.joinedPercorsi[percorso.id]);
   const recensioni = reviewsOfPercorso(percorso);
+  const eta = etaConsigliata(percorso);
 
   const path = $('#detail-path');
   path.setAttribute('d', percorso.path);
@@ -582,31 +609,24 @@ function renderDetail() {
   $('[data-detail="badge"]').textContent = `Fuori dal centro · ${percorso.zone}`;
   $('[data-detail="name"]').textContent = percorso.name;
   $('[data-detail="meta"]').textContent =
-    `${percorso.km} · ${percorso.durata} · per ${percorso.eta}`;
+    `${percorso.km} · ${percorso.durata} · ${percorso.tappe.length} tappe`;
   $('[data-detail="description"]').textContent = percorso.descrizione;
 
   $('#detail-steps').innerHTML = percorso.tappe.map((tappa) => `<li>${tappa}</li>`).join('');
 
   $('[data-detail="km"]').textContent = percorso.km;
   $('[data-detail="durata"]').textContent = percorso.durata;
-  $('[data-detail="eta"]').textContent = percorso.eta;
-  $('[data-detail="partecipanti"]').textContent =
-    `${percorso.partecipanti + (joined ? 1 : 0)} persone`;
+  $('[data-detail="eta"]').textContent = eta.fascia;
+  $('[data-detail="eta-note"]').textContent = eta.persone
+    ? `In base all’età delle ${eta.persone} persone che l’hanno già fatto`
+    : 'Nessuno l’ha ancora fatto: adatto a tutti';
 
-  $('#percorso-tags').innerHTML = percorso.interessi
-    .map((interesse) => `<span class="tag">${interesse}</span>`)
-    .join('');
+  $('#percorso-passioni').innerHTML = passioniHtml(percorso.passioni);
 
   $('#percorso-guida-img').src = percorso.guida.img;
   $('#percorso-guida-img').alt = `Foto di ${percorso.guida.nome} ${percorso.guida.cognome}`;
   $('#percorso-guida-name').textContent = `${percorso.guida.nome} ${percorso.guida.cognome}`;
   $('#percorso-guida-role').textContent = percorso.guida.ruolo;
-
-  const joinBtn = $('#percorso-join');
-  joinBtn.textContent = joined ? 'Iscritto · annulla' : 'Unisciti al gruppo';
-  joinBtn.classList.toggle('btn--primary', !joined);
-  joinBtn.classList.toggle('btn--outline', joined);
-  joinBtn.setAttribute('aria-pressed', String(joined));
 
   $('#percorso-rating').innerHTML = ratingSummaryHtml(recensioni);
   $('#percorso-reviews').innerHTML = recensioni.map(reviewItemHtml).join('');
@@ -641,6 +661,7 @@ function renderUscita() {
   $('#uscita-title').textContent = uscita.title;
   $('#uscita-meta').textContent = uscita.meta;
   $('#uscita-description').textContent = uscita.descrizione;
+  $('#uscita-passioni').innerHTML = passioniHtml(uscita.passioni);
   $('#uscita-ritrovo').textContent = uscita.ritrovo;
   $('#uscita-posti').textContent = `${posti} su ${uscita.posti}`;
 
@@ -673,11 +694,10 @@ function renderUscita() {
 function renderChat() {
   const isPercorso = state.chatType === 'percorso';
   const target = isPercorso ? selectedPercorso() : selectedUscita();
-  const joined = isPercorso
-    ? Boolean(state.joinedPercorsi[target.id])
-    : Boolean(state.joined[target.id]);
+  /* La chat di un percorso è aperta a tutti;
+     in quella di un'uscita scrive solo chi è iscritto */
+  const puoScrivere = isPercorso || Boolean(state.joined[target.id]);
 
-  const partecipanti = isPercorso ? target.partecipanti : target.chatPartecipanti;
   const messaggiBase = isPercorso
     ? (DATA.percorsoChat[target.id] || [])
     : (DATA.chat[target.id] || []);
@@ -692,9 +712,10 @@ function renderChat() {
     : `Foto di ${target.organizzatore.nome}`;
 
   $('#chat-title').textContent = isPercorso ? target.name : target.title;
+  const iscritto = Boolean(state.joined[target.id]);
   $('#chat-sub').textContent = isPercorso
-    ? `${partecipanti + (joined ? 1 : 0)} partecipanti · ${target.eta} · ${target.interessi.join(' · ')}`
-    : `${partecipanti + (joined ? 1 : 0)} partecipanti · ${target.date}`;
+    ? `Chat aperta a tutti · ${target.passioni.join(' · ')}`
+    : `${target.chatPartecipanti + (iscritto ? 1 : 0)} partecipanti · ${target.date}`;
 
   $('#chat-thread').innerHTML = messaggi.map((m) => {
     if (m.mio) {
@@ -716,45 +737,110 @@ function renderChat() {
       </div>`;
   }).join('');
 
-  $('#chat-gate').hidden = joined;
-  $('#chat-gate-text').textContent = isPercorso
-    ? 'Unisciti al gruppo per scrivere e conoscere gli altri.'
-    : 'Unisciti all’uscita per scrivere nel gruppo.';
-  $('#chat-form').hidden = !joined;
+  $('#chat-gate').hidden = puoScrivere;
+  $('#chat-form').hidden = !puoScrivere;
 
   const thread = $('#chat-thread');
   thread.scrollTop = thread.scrollHeight;
 }
 
+/* --------------------------------------------------------------------------
+   Profilo: uscite, recensioni e numeri di chi usa l'app
+   -------------------------------------------------------------------------- */
+function isMia(recensione) {
+  return recensione.nome === DATA.profilo.nome && recensione.cognome === DATA.profilo.cognome;
+}
+
+/* Tutte le recensioni del profilo, in uscite e percorsi
+   (comprese quelle scritte durante la demo) */
+function mieRecensioni() {
+  const diUscite = DATA.uscite.flatMap((u) =>
+    reviewsOf(u).filter(isMia).map((r) => ({ recensione: r, tipo: 'uscita', target: u })));
+  const diPercorsi = DATA.percorsi.flatMap((p) =>
+    reviewsOfPercorso(p).filter(isMia).map((r) => ({ recensione: r, tipo: 'percorso', target: p })));
+  return diUscite.concat(diPercorsi);
+}
+
+function usciteFatte() {
+  return DATA.profilo.usciteFatte
+    .map((f) => ({ data: f.data, uscita: DATA.uscite.find((u) => u.id === f.uscita) }))
+    .filter((f) => f.uscita);
+}
+
+/* Quartieri visitati: quelli delle uscite fatte e di ciò che ha recensito */
+function quartieriEsplorati() {
+  const nomi = new Set(usciteFatte().map((f) => f.uscita.quartiere));
+  mieRecensioni().forEach((m) => {
+    nomi.add(m.tipo === 'percorso' ? m.target.zone : m.target.quartiere);
+  });
+  return nomi.size;
+}
+
+function uscitaRow(uscita, kicker, meta) {
+  return `
+    <button class="zone-item" type="button" data-uscita="${uscita.id}">
+      <img class="zone-item__img" src="${uscita.img}" alt="" loading="lazy">
+      <span class="zone-item__text">
+        <span class="zone-item__kicker zone-item__kicker--${uscita.tone === 'pine' ? 'pine' : 'brick'}">${kicker}</span>
+        <span class="zone-item__title">${uscita.title}</span>
+        <span class="zone-item__meta">${meta}</span>
+      </span>
+    </button>`;
+}
+
+function miaRecensioneHtml({ recensione, tipo, target }) {
+  const isPercorso = tipo === 'percorso';
+  const titolo = isPercorso ? target.name : target.title;
+  const zona = isPercorso ? target.zone : target.quartiere;
+  const apri = isPercorso ? `data-open="${target.id}"` : `data-uscita="${target.id}"`;
+
+  return `
+    <article class="my-review">
+      <p class="my-review__kicker">${isPercorso ? 'Percorso' : 'Uscita'} · ${zona}</p>
+      <h3 class="my-review__title">
+        <button class="card__title-btn" type="button" ${apri}>${titolo}</button>
+      </h3>
+      ${starsHtml(recensione.stelle)}
+      <p class="my-review__text">${recensione.testo}</p>
+    </article>`;
+}
+
 function renderJoined() {
   const uscite = DATA.uscite.filter((u) => state.joined[u.id]);
-  const percorsi = DATA.percorsi.filter((p) => state.joinedPercorsi[p.id]);
 
   $('#joined-title-count').textContent = uscite.length;
   $('#joined-empty').hidden = uscite.length > 0;
-
   $('#joined-list').innerHTML = uscite
-    .map((u) => `
-      <div class="joined-card">
-        <span class="joined-card__date">${u.date}</span>
-        <span class="joined-card__title">${u.title}</span>
-      </div>`)
+    .map((u) => uscitaRow(u, u.date, `Ritrovo: ${u.ritrovo}`))
     .join('');
 
-  $('#joined-percorsi-count').textContent = percorsi.length;
-  $('#joined-percorsi-empty').hidden = percorsi.length > 0;
-
-  $('#joined-percorsi-list').innerHTML = percorsi
-    .map((p) => `
-      <div class="joined-card">
-        <span class="joined-card__date">${p.zone} · ${p.eta}</span>
-        <span class="joined-card__title">${p.name}</span>
-        <span class="joined-card__meta">${p.partecipanti + 1} partecipanti · ${p.interessi.join(' · ')}</span>
-      </div>`)
+  const fatte = usciteFatte();
+  $('#past-count').textContent = fatte.length;
+  $('#past-list').innerHTML = fatte
+    .map((f) => uscitaRow(f.uscita, `${f.data} · ${f.uscita.quartiere}`, `con ${f.uscita.organizzatore.nome} ${f.uscita.organizzatore.cognome}`))
     .join('');
+
+  const recensioni = mieRecensioni();
+  $('#my-reviews-count').textContent = recensioni.length;
+  $('#my-reviews').innerHTML = recensioni.map(miaRecensioneHtml).join('');
 }
 
 function renderProfilo() {
+  const p = DATA.profilo;
+
+  $('#profilo-foto').src = p.foto;
+  $('#profilo-foto').alt = `Foto di ${p.nome} ${p.cognome}`;
+  $('#profilo-title').textContent = `${p.nome} ${p.cognome}`;
+  $('#profilo-job').textContent = `${p.eta} anni · ${p.professione}`;
+  $('#profilo-sub').textContent = `Napoli · ${p.quartiere} · su Percorsi da ${p.membroDa}`;
+  $('#profilo-bio').textContent = p.bio;
+  $('#profilo-badge').hidden = !state.verified;
+  $('#profilo-passioni').innerHTML = passioniHtml(p.passioni);
+
+  $('#stat-uscite').textContent = usciteFatte().length;
+  $('#stat-recensioni').textContent = mieRecensioni().length;
+  $('#stat-quartieri').textContent = quartieriEsplorati();
+
   $('#verify-title').textContent = state.verified ? 'Profilo verificato' : 'Profilo non verificato';
   $('#verify-desc').textContent = state.verified
     ? 'Puoi proporre tappe, percorsi, gruppi e attività alle guide verificate. Nome e zona sono visibili a chi partecipa.'
@@ -920,12 +1006,6 @@ function toggleJoin(id) {
   render();
 }
 
-function togglePercorsoJoin(id) {
-  state.joinedPercorsi[id] = !state.joinedPercorsi[id];
-  saveJoined(PERCORSI_KEY, state.joinedPercorsi);
-  render();
-}
-
 function verifyProfile() {
   if (state.verified) return;
 
@@ -986,9 +1066,9 @@ function addUscitaReview(event) {
   const id = state.uscita;
   state.newReviews[id] = state.newReviews[id] || [];
   state.newReviews[id].unshift({
-    nome: 'Tu',
-    cognome: '',
-    img: null,
+    nome: DATA.profilo.nome,
+    cognome: DATA.profilo.cognome,
+    img: DATA.profilo.foto,
     stelle: state.stars,
     testo: escapeHtml(testo)
   });
@@ -1019,9 +1099,9 @@ function addPercorsoReview(event) {
   const id = state.percorso;
   state.newPercorsoReviews[id] = state.newPercorsoReviews[id] || [];
   state.newPercorsoReviews[id].unshift({
-    nome: 'Tu',
-    cognome: '',
-    img: null,
+    nome: DATA.profilo.nome,
+    cognome: DATA.profilo.cognome,
+    img: DATA.profilo.foto,
     stelle: state.percorsoStars,
     testo: escapeHtml(testo)
   });
@@ -1042,10 +1122,7 @@ function sendChatMessage(event) {
 
   const isPercorso = state.chatType === 'percorso';
   const id = isPercorso ? state.percorso : state.uscita;
-  const joined = isPercorso
-    ? Boolean(state.joinedPercorsi[id])
-    : Boolean(state.joined[id]);
-  if (!joined) return;
+  if (!isPercorso && !state.joined[id]) return;
 
   const store = isPercorso ? state.percorsoMessages : state.messages;
 
@@ -1110,21 +1187,9 @@ document.addEventListener('click', (event) => {
     return;
   }
 
-  if (event.target.closest('[data-join-percorso]')) {
-    togglePercorsoJoin(state.percorso);
-
-    if (state.screen === 'chat') $('#chat-input').focus();
-    return;
-  }
-
   if (event.target.closest('[data-join-chat]')) {
-    if (state.chatType === 'percorso') {
-      togglePercorsoJoin(state.percorso);
-    } else {
-      toggleJoin(state.uscita);
-    }
-
-    if (state.screen === 'chat') $('#chat-input').focus();
+    toggleJoin(state.uscita);
+    $('#chat-input').focus();
     return;
   }
 

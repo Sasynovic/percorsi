@@ -40,12 +40,13 @@ percorsi_shapers_hub_napoli/
 | --- | --- |
 | Testi, date, titoli, posti disponibili | `js/data.js` |
 | Foto dei luoghi, volti e recensioni | `assets/img/` |
-| Percorsi (guida, età, interessi, recensioni) | `js/data.js` |
+| Percorsi (chi li propone, età di chi li ha fatti, passioni, recensioni) | `js/data.js` |
 | Guide verificate a cui proporre un'attività | `js/data.js` (array `GUIDE`) |
 | Messaggi già presenti nelle chat delle uscite | `js/data.js` (oggetto `CHAT`) |
 | Messaggi già presenti nelle chat dei percorsi | `js/data.js` (oggetto `PERCORSO_CHAT`) |
 | Quartieri della mappa, distanze e curiosità | `js/data.js` (array `QUARTIERI`) |
 | Disegno della mappa (costa, Vesuvio, nomi) | `index.html` (SVG nella schermata `mappa`) |
+| Dati del profilo (foto, età, professione, passioni, uscite fatte) | `js/data.js` (oggetto `PROFILO`) |
 | Verifica del profilo (demo) | `js/app.js` (`state.verified`) |
 | Colori e font di tutto il sito | `css/base.css` (blocco `:root`) |
 | Aspetto di bottoni e card | `css/components.css` |
@@ -65,6 +66,7 @@ In `js/data.js`, dentro l'array `USCITE`, copia un blocco esistente e cambia i v
   date: 'Sab 20 dic · 10:00',
   title: 'Titolo dell’uscita',
   meta: 'Storia · 25-35 anni',
+  passioni: ['Storia', 'Architettura'],   // passioni consigliate
   posti: 6,
   img: 'assets/img/luogo-sanita.jpg',
   imgAlt: 'Descrizione della foto per chi non la vede',
@@ -119,9 +121,8 @@ In `PERCORSI` aggiungi un oggetto come questo:
   durata: '1h',
   img: 'assets/img/luogo-materdei.jpg',
   imgAlt: 'Descrizione della foto per chi non la vede',
-  eta: '25-40 anni',
-  interessi: ['Storia', 'Architettura'],
-  partecipanti: 10,
+  etaPassate: [24, 27, 29, 31, 33, 35, 38],  // età di chi l'ha già fatto
+  passioni: ['Storia', 'Architettura'],      // passioni consigliate
   guida: {
     nome: 'Nome',
     cognome: 'Cognome',
@@ -136,7 +137,7 @@ In `PERCORSI` aggiungi un oggetto come questo:
       cognome: 'Cognome',
       img: 'assets/img/persona-elena.jpg',
       stelle: 5,
-      testo: 'Com’è stato camminare con questo gruppo…',
+      testo: 'Com’è stato fare questo percorso…',
       foto: ['assets/img/foto-sanita.jpg'] // facoltativo
     }
   ]
@@ -217,18 +218,31 @@ a destra. `daTe` è scritto a mano e si riferisce al quartiere del profilo
 - **Filtri**: i chip hanno `data-filter`, le card delle uscite hanno `data-join`.
   I click vengono gestiti tutti in un unico punto (`document.addEventListener`).
 - **Dettaglio percorso**: ogni card ha `data-open="p1"` e apre la schermata
-  `dettaglio` con foto, guida, età, interessi, tracciato, tappe e recensioni.
+  `dettaglio` con foto, chi l'ha proposto, passioni ed età consigliate,
+  tracciato, tappe, chat e recensioni.
+- **Età consigliata**: non si scrive a mano. `etaConsigliata()` in `js/app.js`
+  legge `etaPassate` (le età di chi ha già fatto il percorso), scarta il 15% più
+  giovane e il 15% più anziano e mostra la fascia che resta, es. "28-38 anni",
+  insieme al numero di persone su cui è calcolata.
+- **Passioni consigliate**: il campo `passioni` di percorsi e uscite compare
+  nelle card ("Per chi ama …") e nel riquadro verde dei dettagli.
 - **Dettaglio uscita**: il titolo di ogni card ha `data-uscita="u1"` e apre la
   schermata `uscita`, riempita con i dati di quell'uscita.
 - **Recensioni**: valgono sia per le uscite sia per i percorsi. Le stelle sono
   generate da `stelle` (1–5). Una recensione scritta durante la demo viene
-  aggiunta a `state.newReviews` (uscite) o `state.newPercorsoReviews` (percorsi)
-  e resta solo fino al ricaricamento.
+  aggiunta a `state.newReviews` (uscite) o `state.newPercorsoReviews` (percorsi),
+  firmata con nome e foto del profilo, e resta solo fino al ricaricamento.
+- **Profilo**: i dati stanno in `PROFILO` (`js/data.js`). "Le tue recensioni"
+  non si scrive a mano: raccoglie tutte le recensioni di uscite e percorsi con lo
+  stesso `nome` e `cognome` del profilo, comprese quelle scritte nella demo.
+  "Uscite fatte" usa `usciteFatte` (id dell'uscita + data). I numeri in alto
+  (uscite fatte, recensioni, quartieri esplorati) sono calcolati da questi dati.
 - **Chat**: i messaggi di partenza sono in `DATA.chat` (uscite) e
   `DATA.percorsoChat` (percorsi). Quelli scritti durante la demo finiscono in
   `state.messages` o `state.percorsoMessages` (solo in memoria). La stessa
-  schermata `chat` mostra l'una o l'altra in base a `state.chatType`; chi non è
-  iscritto la vede in sola lettura.
+  schermata `chat` mostra l'una o l'altra in base a `state.chatType`. La chat di
+  un percorso è aperta a tutti (i percorsi non hanno gruppi né iscrizioni); in
+  quella di un'uscita può scrivere solo chi è iscritto.
 - **Verifica del profilo**: il profilo parte come "non verificato". Senza
   verifica, la schermata `proponi` mostra solo il blocco informativo e il form
   resta nascosto. Il bottone "Verifica il profilo (demo)" imposta
@@ -241,27 +255,31 @@ a destra. `daTe` è scritto a mano e si riferisce al quartiere del profilo
   conferma, che per un'attività nomina la guida scelta.
 - **Iscrizioni e verifica**: vengono salvate in `localStorage`, quindi restano
   anche dopo aver ricaricato la pagina. Le chiavi sono
-  `percorsi_shapers_hub_napoli:joined`, `percorsi_shapers_hub_napoli:percorsi`
-  e `percorsi_shapers_hub_napoli:verified`.
+  `percorsi_shapers_hub_napoli:joined` (uscite) e
+  `percorsi_shapers_hub_napoli:verified`.
 
 ## Schermate presenti
 
 1. **Home** — ricerca, uscite in gruppo, percorsi in evidenza, realtà locali.
-2. **Percorsi** — elenco con foto, voto medio, età e interessi.
-3. **Dettaglio percorso** — foto, guida, distanza, durata, età, partecipanti,
-   tracciato, tappe, iscrizione al gruppo, chat e recensioni con stelle e foto.
+2. **Percorsi** — elenco con foto, voto medio, età e passioni consigliate.
+3. **Dettaglio percorso** — foto, chi l'ha proposto, passioni consigliate, età
+   consigliata (calcolata da chi l'ha già fatto), distanza, durata, tracciato,
+   tappe, chat aperta a tutti e recensioni con stelle e foto.
 4. **Gruppi** — uscite filtrabili per interesse, iscrizione.
-5. **Dettaglio uscita** — foto del luogo, organizzatore, ritrovo, posti,
-   iscrizione, chat e recensioni con stelle e foto.
-6. **Chat** — messaggi del gruppo dell'uscita o del percorso, con campo di
-   scrittura per chi è iscritto.
+5. **Dettaglio uscita** — foto del luogo, organizzatore, passioni consigliate,
+   ritrovo, posti, iscrizione, chat e recensioni con stelle e foto.
+6. **Chat** — messaggi dell'uscita o del percorso. Nei percorsi scrive chiunque;
+   nelle uscite solo chi è iscritto.
 7. **Mappa** — mappa illustrata di Napoli (golfo, Vesuvio, Capri) con un punto
    per quartiere, filtri (tutto, percorsi, uscite, realtà locali) e il puntino
    "Sei qui". Toccando un quartiere si apre la sua scheda: distanza, una
    curiosità e l'elenco di percorsi, uscite e realtà, che aprono il dettaglio.
    Sotto, le realtà locali ordinate dalla più vicina. Dalla home, "Sulla mappa"
    accanto a una realtà apre direttamente il suo quartiere.
-8. **Profilo** — verifica del profilo, uscite prenotate e percorsi scelti.
+8. **Profilo** — foto, nome, età, professione, quartiere, presentazione, numeri
+   (uscite fatte, recensioni, quartieri), passioni, verifica del profilo, uscite
+   prenotate, uscite fatte e recensioni scritte. Uscite e recensioni aprono il
+   loro dettaglio.
 9. **Proponi** — accessibile solo con profilo verificato; si sceglie tra tappa,
    percorso, gruppo e attività. Per un'attività si seleziona la guida verificata
    e si vede la sua scheda prima dell'invio. Dopo l'invio si può tornare alla
@@ -310,14 +328,17 @@ pubblicare l'app.
   dei quartieri: controllale prima di pubblicare.
 - La mappa è un disegno, non in scala e senza dati di posizione reali: in un'app
   vera andrebbe sostituita da una mappa geografica (per esempio con OpenStreetMap).
+- Il profilo di Luca Marino è **fittizio**: nome, età, professione e foto sono
+  dati dimostrativi.
 - La verifica del profilo è **simulata**: un click imposta il flag nel browser.
   In un'app reale la verifica va fatta lato server (documento, telefono o account
   verificato) e il flag non deve poter essere modificato dal browser.
 - Anche l'invio di un'attività a una guida è simulato: la proposta resta solo in
   memoria e non arriva a nessuno. In un'app reale servirebbe un backend con
   notifiche e risposta della guida.
-- I gruppi dei percorsi sono caratterizzati da età e interessi (`eta`,
-  `interessi`): servono a far incontrare persone simili nelle passeggiate.
+- I percorsi non hanno gruppi: si possono fare in autonomia e si commentano
+  nella chat. Età e passioni consigliate aiutano a capire se un percorso fa
+  per te. Le età in `etaPassate` sono dati dimostrativi.
 - I font sono inclusi localmente (subset latino). Le licenze originali
   (SIL Open Font License) restano valide.
 - I pulsanti "Napoli" e "Notifiche" mostrano un piccolo messaggio demo: sono

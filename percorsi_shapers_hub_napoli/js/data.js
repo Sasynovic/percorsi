@@ -18,6 +18,7 @@ const CHIPS = [
    - posti: posti ancora disponibili
    - img: foto del luogo (nella cartella assets/img)
    - quartiere: dove si svolge, deve combaciare con un nome di QUARTIERI
+   - passioni: passioni consigliate per chi vuole partecipare
    - organizzatore: chi propone l'uscita
    - recensioni: stelle da 1 a 5, testo e foto facoltative
    - chatPartecipanti: quante persone sono già nella chat                  */
@@ -29,6 +30,7 @@ const USCITE = [
     date: 'Sab 29 nov · 10:00',
     title: 'Sanità, tra chiese e palazzi nobiliari',
     meta: 'Storia · 20-30 anni',
+    passioni: ['Storia', 'Architettura'],
     posti: 6,
     img: 'assets/img/luogo-sanita.jpg',
     imgAlt: 'Vicolo del Rione Sanità con i panni stesi tra i palazzi',
@@ -74,6 +76,7 @@ const USCITE = [
     date: 'Dom 30 nov · 15:30',
     title: 'Murales a San Giovanni a Teduccio',
     meta: 'Street art · 30-40 anni',
+    passioni: ['Street art', 'Fotografia'],
     posti: 8,
     img: 'assets/img/luogo-san-giovanni.jpg',
     imgAlt: 'Murales verdi e grigi dipinti su un muro lungo la strada',
@@ -119,6 +122,7 @@ const USCITE = [
     date: 'Sab 6 dic · 9:30',
     title: 'Fotografia all’alba sul lungomare di Bagnoli',
     meta: 'Fotografia · tutte le età',
+    passioni: ['Fotografia', 'Mare'],
     posti: 5,
     img: 'assets/img/luogo-bagnoli.jpg',
     imgAlt: 'Il pontile di Bagnoli sul mare con la costa sullo sfondo',
@@ -157,6 +161,7 @@ const USCITE = [
     date: 'Dom 7 dic · 10:00',
     title: 'Il Bosco di Capodimonte e i suoi sentieri',
     meta: 'Natura urbana · 40+ anni',
+    passioni: ['Natura urbana', 'Botanica'],
     posti: 10,
     img: 'assets/img/luogo-capodimonte.jpg',
     imgAlt: 'La Reggia di Capodimonte con le palme e il grande prato verde',
@@ -194,6 +199,7 @@ const USCITE = [
     date: 'Sab 13 dic · 16:00',
     title: 'Materdei e il Cavone, a passo lento',
     meta: 'Storia · 18-25 anni',
+    passioni: ['Storia', 'Artigianato'],
     posti: 4,
     img: 'assets/img/luogo-materdei.jpg',
     imgAlt: 'La piazzetta di Materdei con i palazzi e le auto parcheggiate',
@@ -284,10 +290,11 @@ const PERCORSO_CHAT = {
 /* Percorsi
    - path, start, end: coordinate del disegno (area 84 x 84)
    - tappe: elenco dei punti del percorso mostrati nel dettaglio
-   - eta, interessi: a chi è pensato il gruppo
-   - guida: chi accompagna il gruppo
-   - recensioni: stelle da 1 a 5, testo e foto facoltative
-   - partecipanti: quante persone sono già nel gruppo                     */
+   - etaPassate: età di chi ha già fatto il percorso; l'app ne ricava
+     l'"età consigliata" (la fascia in cui sta la maggior parte di loro)
+   - passioni: passioni consigliate per chi vuole farlo
+   - guida: chi ha proposto il percorso (mostrato come "Proposto da")
+   - recensioni: stelle da 1 a 5, testo e foto facoltative                */
 const PERCORSI = [
   {
     id: 'p1',
@@ -301,9 +308,8 @@ const PERCORSI = [
     durata: '1h 30',
     img: 'assets/img/luogo-materdei.jpg',
     imgAlt: 'La piazzetta di Materdei con i palazzi e le auto parcheggiate',
-    eta: '25-40 anni',
-    interessi: ['Storia', 'Artigianato'],
-    partecipanti: 12,
+    etaPassate: [24, 26, 27, 28, 29, 30, 31, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 44],
+    passioni: ['Storia', 'Artigianato'],
     guida: {
       nome: 'Chiara',
       cognome: 'Lombardi',
@@ -331,6 +337,13 @@ const PERCORSI = [
         img: 'assets/img/persona-marco-p.jpg',
         stelle: 4,
         testo: 'Le scale sono toste ma Chiara sa dosare le pause. Gruppo piccolo, molto piacevole.'
+      },
+      {
+        nome: 'Luca',
+        cognome: 'Marino',
+        img: 'assets/img/persona-luca.jpg',
+        stelle: 4,
+        testo: 'Il Cavone è più ripido di quanto sembri, ma le botteghe dei presepiali ripagano la fatica. Da fare di mattina.'
       }
     ]
   },
@@ -346,9 +359,8 @@ const PERCORSI = [
     durata: '2h',
     img: 'assets/img/luogo-bagnoli.jpg',
     imgAlt: 'Il pontile di Bagnoli sul mare con la costa sullo sfondo',
-    eta: '30-45 anni',
-    interessi: ['Mare', 'Rigenerazione urbana'],
-    partecipanti: 9,
+    etaPassate: [29, 31, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 44, 46, 48, 52],
+    passioni: ['Mare', 'Rigenerazione urbana', 'Fotografia'],
     guida: {
       nome: 'Sara',
       cognome: 'Iorio',
@@ -391,9 +403,8 @@ const PERCORSI = [
     durata: '1h 15',
     img: 'assets/img/luogo-sanita.jpg',
     imgAlt: 'Vicolo del Rione Sanità con i panni stesi tra i palazzi',
-    eta: '20-35 anni',
-    interessi: ['Storia', 'Architettura'],
-    partecipanti: 14,
+    etaPassate: [19, 21, 22, 22, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 29, 30, 31, 33, 35, 38],
+    passioni: ['Storia', 'Architettura'],
     guida: {
       nome: 'Giulia',
       cognome: 'Russo',
@@ -421,6 +432,14 @@ const PERCORSI = [
         img: 'assets/img/persona-marta.jpg',
         stelle: 4,
         testo: 'Bellissimi i cortili aperti dei palazzi. Un po’ di confusione in via dei Tribunali, per il resto ottimo.'
+      },
+      {
+        nome: 'Luca',
+        cognome: 'Marino',
+        img: 'assets/img/persona-luca.jpg',
+        stelle: 5,
+        testo: 'La scala del Palazzo dello Spagnolo vista dal vivo vale il percorso da sola. Tappe ben scelte, ritmo giusto per fermarsi a fotografare.',
+        foto: ['assets/img/foto-sanita.jpg']
       }
     ]
   },
@@ -436,9 +455,8 @@ const PERCORSI = [
     durata: '1h 40',
     img: 'assets/img/luogo-san-giovanni.jpg',
     imgAlt: 'Murales verdi e grigi dipinti su un muro lungo la strada',
-    eta: '25-40 anni',
-    interessi: ['Street art', 'Fotografia'],
-    partecipanti: 11,
+    etaPassate: [23, 25, 26, 27, 27, 28, 29, 29, 30, 31, 32, 33, 34, 35, 36, 38, 40],
+    passioni: ['Street art', 'Fotografia'],
     guida: {
       nome: 'Marco',
       cognome: 'De Luca',
@@ -588,6 +606,27 @@ const MAP_LAYERS = [
   { id: 'realta', label: 'Realtà locali' }
 ];
 
+/* Profilo di chi usa l'app (dati di esempio)
+   - nome + cognome: le recensioni con lo stesso nome e cognome, in uscite e
+     percorsi, compaiono da sole in "Le tue recensioni"
+   - usciteFatte: uscite a cui ha già partecipato (id di USCITE + data)     */
+const PROFILO = {
+  nome: 'Luca',
+  cognome: 'Marino',
+  foto: 'assets/img/persona-luca.jpg',
+  eta: 31,
+  professione: 'Architetto restauratore',
+  quartiere: 'Materdei',
+  membroDa: 'marzo 2025',
+  bio: 'Restauro palazzi storici per lavoro e nel tempo libero cammino la città con la macchina fotografica al collo. Mi piacciono i cortili nascosti e le facciate che raccontano storie.',
+  passioni: ['Architettura', 'Street art', 'Fotografia', 'Storia'],
+  usciteFatte: [
+    { uscita: 'u2', data: 'Dom 26 ott' },
+    { uscita: 'u3', data: 'Sab 18 ott' },
+    { uscita: 'u1', data: 'Sab 4 ott' }
+  ]
+};
+
 /* Un unico oggetto letto da app.js */
 const DATA = {
   chips: CHIPS,
@@ -597,6 +636,7 @@ const DATA = {
   quartieri: QUARTIERI,
   mapLayers: MAP_LAYERS,
   guide: GUIDE,
+  profilo: PROFILO,
   chat: CHAT,
   percorsoChat: PERCORSO_CHAT
 };
