@@ -433,21 +433,91 @@
              ============================================================ -->
         <section class="screen" data-screen="mappa" aria-labelledby="mappa-title" hidden>
           <div class="screen__inner">
-            <h1 class="title-xl" id="mappa-title">Mappa</h1>
+            <header class="map-head">
+              <h1 class="title-xl" id="mappa-title">Mappa</h1>
+              <p class="lead" id="map-stats"></p>
+            </header>
 
-            <svg class="map" viewBox="0 0 350 260" role="img"
-                 aria-label="Mappa illustrativa di Napoli con i punti delle realtà locali">
-              <path d="M0 190 C 60 170, 110 200, 170 180 S 290 150, 350 170 L 350 260 L 0 260 Z" fill="#BFD3DA"></path>
-              <path d="M30 40 C 90 20, 160 60, 210 40 S 320 30, 330 90 C 300 140, 220 120, 170 150 S 50 160, 30 120 Z" fill="#F1ECE2"></path>
-              <path d="M40 130 C 100 110, 150 140, 220 100" fill="none" stroke="#D9D2C5" stroke-width="6" stroke-linecap="round"></path>
-              <path d="M120 40 L 140 160" fill="none" stroke="#D9D2C5" stroke-width="6" stroke-linecap="round"></path>
-              <circle cx="110" cy="80" r="9" fill="#D85A30" stroke="#FFFFFF" stroke-width="3"></circle>
-              <circle cx="200" cy="70" r="9" fill="#1D7A6B" stroke="#FFFFFF" stroke-width="3"></circle>
-              <circle cx="250" cy="120" r="9" fill="#1A2238" stroke="#FFFFFF" stroke-width="3"></circle>
-              <circle cx="70" cy="150" r="9" fill="#D85A30" stroke="#FFFFFF" stroke-width="3"></circle>
-            </svg>
+            <!-- Filtri: cosa mostrare sulla mappa -->
+            <div class="chips" role="group" aria-label="Cosa mostrare sulla mappa" id="map-layers"></div>
 
-            <p class="map-note">Mappa illustrativa: nell’app sarà una mappa reale con i punti geolocalizzati.</p>
+            <!-- Mappa illustrata: il disegno è un SVG, i quartieri sono bottoni sopra -->
+            <div class="map-wrap">
+              <svg class="map" viewBox="0 0 360 280" aria-hidden="true" focusable="false">
+                <defs>
+                  <pattern id="map-waves" width="24" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M0 6 Q 6 2, 12 6 T 24 6" fill="none" stroke="#A9C4CD" stroke-width="1.2" stroke-linecap="round"></path>
+                  </pattern>
+                </defs>
+
+                <!-- Mare -->
+                <rect width="360" height="280" fill="#BFD3DA"></rect>
+                <rect width="360" height="280" fill="url(#map-waves)" opacity="0.6"></rect>
+
+                <!-- Costa e città -->
+                <path class="map__land" d="M0 0 H360 V280 H292 C 296 244, 308 206, 322 190 C 306 176, 282 172, 258 174
+                         C 242 176, 230 184, 220 190 C 210 196, 202 200, 194 206 C 188 210, 182 206, 178 198
+                         C 168 188, 150 186, 136 192 C 120 200, 110 214, 102 230 C 96 240, 86 238, 82 228
+                         C 76 210, 66 194, 52 186 C 38 180, 22 182, 10 190 C 6 193, 3 195, 0 196 Z"></path>
+
+                <!-- Verde: Real Bosco di Capodimonte e collina di Posillipo -->
+                <ellipse cx="226" cy="40" rx="40" ry="20" fill="#D5E6CF"></ellipse>
+                <path d="M100 222 C 108 206, 120 196, 138 194 C 128 204, 116 214, 104 230 Z" fill="#D5E6CF"></path>
+                <ellipse cx="62" cy="120" rx="34" ry="16" fill="#E2EBD6"></ellipse>
+
+                <!-- Strade principali -->
+                <g fill="none" stroke="#E4DCCD" stroke-width="5" stroke-linecap="round">
+                  <path d="M200 196 C 204 170, 206 140, 210 112 C 212 92, 214 72, 222 54"></path>
+                  <path d="M60 176 C 100 168, 130 150, 168 140 C 200 132, 240 150, 316 168"></path>
+                  <path d="M168 140 C 166 118, 160 96, 150 70"></path>
+                </g>
+
+                <!-- Vesuvio -->
+                <g class="map__volcano">
+                  <path d="M300 252 L 326 214 Q 332 207, 338 214 L 360 244 V 252 Z" fill="#CFC3B0"></path>
+                  <path d="M318 226 Q 332 220, 346 228" fill="none" stroke="#B9AB95" stroke-width="1.5"></path>
+                  <path d="M330 206 C 326 198, 334 194, 330 186" fill="none" stroke="#B9AB95" stroke-width="1.5" stroke-linecap="round"></path>
+                </g>
+
+                <!-- Isole -->
+                <circle cx="64" cy="208" r="5" fill="#E9E1D2"></circle>
+                <ellipse cx="110" cy="274" rx="28" ry="8" fill="#E9E1D2"></ellipse>
+
+                <!-- Nomi dei luoghi -->
+                <g class="map__labels">
+                  <text x="176" y="242" class="map__label map__label--sea">Golfo di Napoli</text>
+                  <text x="98" y="266" class="map__label map__label--small">Capri</text>
+                  <text x="326" y="270" class="map__label map__label--small" text-anchor="middle">Vesuvio</text>
+                  <text x="58" y="124" class="map__label map__label--small" text-anchor="middle">Campi Flegrei</text>
+                  <text x="128" y="214" class="map__label map__label--small" text-anchor="middle">Posillipo</text>
+                </g>
+              </svg>
+
+              <!-- Bottoni dei quartieri, posizionati sopra il disegno -->
+              <div class="map-pins" id="map-pins"></div>
+
+              <span class="map-legend">Mappa illustrata · non in scala</span>
+            </div>
+
+            <!-- Scheda del quartiere selezionato -->
+            <section class="zone-sheet" id="zone-sheet" aria-live="polite" aria-labelledby="zone-title">
+              <header class="zone-sheet__head">
+                <div>
+                  <h2 class="zone-sheet__title" id="zone-title"></h2>
+                  <p class="zone-sheet__distance" id="zone-distance"></p>
+                </div>
+                <span class="zone-sheet__count" id="zone-count"></span>
+              </header>
+
+              <p class="zone-fact">
+                <span class="zone-fact__label">Lo sapevi?</span>
+                <span id="zone-fact"></span>
+              </p>
+
+              <div class="zone-items" id="zone-items"></div>
+
+              <p class="zone-empty" id="zone-empty" hidden></p>
+            </section>
 
             <h2 class="subhead">Realtà locali vicino a te</h2>
             <div class="list" id="realta-mappa"></div>

@@ -44,6 +44,8 @@ percorsi_shapers_hub_napoli/
 | Guide verificate a cui proporre un'attività | `js/data.js` (array `GUIDE`) |
 | Messaggi già presenti nelle chat delle uscite | `js/data.js` (oggetto `CHAT`) |
 | Messaggi già presenti nelle chat dei percorsi | `js/data.js` (oggetto `PERCORSO_CHAT`) |
+| Quartieri della mappa, distanze e curiosità | `js/data.js` (array `QUARTIERI`) |
+| Disegno della mappa (costa, Vesuvio, nomi) | `index.html` (SVG nella schermata `mappa`) |
 | Verifica del profilo (demo) | `js/app.js` (`state.verified`) |
 | Colori e font di tutto il sito | `css/base.css` (blocco `:root`) |
 | Aspetto di bottoni e card | `css/components.css` |
@@ -66,6 +68,7 @@ In `js/data.js`, dentro l'array `USCITE`, copia un blocco esistente e cambia i v
   posti: 6,
   img: 'assets/img/luogo-sanita.jpg',
   imgAlt: 'Descrizione della foto per chi non la vede',
+  quartiere: 'Sanità',   // deve combaciare con un nome di QUARTIERI
   ritrovo: 'Piazza Sanità, davanti alla chiesa',
   descrizione: 'Due righe che raccontano l’uscita.',
   organizzatore: {
@@ -181,6 +184,27 @@ Il menu "A quale guida verificata vuoi proporla?" e la scheda di anteprima
 I testi dei quattro tipi di proposta (titoli dei campi, suggerimenti e messaggio
 di conferma) stanno in `PROPOSAL_TYPES`, all'inizio di `js/app.js`.
 
+### Aggiungere un quartiere alla mappa
+
+La mappa mostra un punto per ogni quartiere di `QUARTIERI` (in `js/data.js`).
+Il numero sul punto conta percorsi, uscite e realtà locali di quel quartiere:
+
+```js
+{
+  nome: 'Vomero',          // stesso testo usato in zone / quartiere
+  x: 130, y: 150,          // posizione sul disegno (area 360 × 280)
+  daTe: '20 min in funicolare',
+  curiosita: 'Una frase da mostrare nel riquadro “Lo sapevi?”.'
+}
+```
+
+Il collegamento è automatico: un percorso compare nel quartiere se il suo
+`zone` è uguale a `nome`; un'uscita o una realtà locale se il loro `quartiere`
+è uguale a `nome`. `x` va da 0 (sinistra) a 360 (destra), `y` da 0 (in alto)
+a 280 (in basso): il mare è nella parte bassa, Bagnoli a sinistra, San Giovanni
+a destra. `daTe` è scritto a mano e si riferisce al quartiere del profilo
+(Materdei, segnato con il puntino blu "Sei qui").
+
 ## Come funziona il codice
 
 - **Stato**: l'oggetto `state` in `js/app.js` contiene schermata attiva, filtro,
@@ -231,7 +255,12 @@ di conferma) stanno in `PROPOSAL_TYPES`, all'inizio di `js/app.js`.
    iscrizione, chat e recensioni con stelle e foto.
 6. **Chat** — messaggi del gruppo dell'uscita o del percorso, con campo di
    scrittura per chi è iscritto.
-7. **Mappa** — mappa illustrativa e realtà locali.
+7. **Mappa** — mappa illustrata di Napoli (golfo, Vesuvio, Capri) con un punto
+   per quartiere, filtri (tutto, percorsi, uscite, realtà locali) e il puntino
+   "Sei qui". Toccando un quartiere si apre la sua scheda: distanza, una
+   curiosità e l'elenco di percorsi, uscite e realtà, che aprono il dettaglio.
+   Sotto, le realtà locali ordinate dalla più vicina. Dalla home, "Sulla mappa"
+   accanto a una realtà apre direttamente il suo quartiere.
 8. **Profilo** — verifica del profilo, uscite prenotate e percorsi scelti.
 9. **Proponi** — accessibile solo con profilo verificato; si sceglie tra tappa,
    percorso, gruppo e attività. Per un'attività si seleziona la guida verificata
@@ -277,7 +306,10 @@ pubblicare l'app.
   grandi viene mostrato come un telefono centrato; sotto i 480 px occupa tutto
   lo schermo.
 - I testi di percorsi, tappe e recensioni sono contenuti dimostrativi: sostituiscili
-  con i contenuti reali in `js/data.js`.
+  con i contenuti reali in `js/data.js`. Lo stesso vale per distanze e curiosità
+  dei quartieri: controllale prima di pubblicare.
+- La mappa è un disegno, non in scala e senza dati di posizione reali: in un'app
+  vera andrebbe sostituita da una mappa geografica (per esempio con OpenStreetMap).
 - La verifica del profilo è **simulata**: un click imposta il flag nel browser.
   In un'app reale la verifica va fatta lato server (documento, telefono o account
   verificato) e il flag non deve poter essere modificato dal browser.

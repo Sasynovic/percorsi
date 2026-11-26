@@ -17,6 +17,7 @@ const CHIPS = [
    - tone: "brick" (rosa) oppure "pine" (verde) per il colore della data
    - posti: posti ancora disponibili
    - img: foto del luogo (nella cartella assets/img)
+   - quartiere: dove si svolge, deve combaciare con un nome di QUARTIERI
    - organizzatore: chi propone l'uscita
    - recensioni: stelle da 1 a 5, testo e foto facoltative
    - chatPartecipanti: quante persone sono già nella chat                  */
@@ -31,6 +32,7 @@ const USCITE = [
     posti: 6,
     img: 'assets/img/luogo-sanita.jpg',
     imgAlt: 'Vicolo del Rione Sanità con i panni stesi tra i palazzi',
+    quartiere: 'Sanità',
     ritrovo: 'Piazza Sanità, davanti alla chiesa',
     descrizione: 'Tre ore a piedi nel rione, dal Palazzo dello Spagnolo al cimitero delle Fontanelle, con una sosta da un pasticcere storico. Si cammina quasi sempre in piano, con due brevi salite e qualche scalinata.',
     organizzatore: {
@@ -75,6 +77,7 @@ const USCITE = [
     posti: 8,
     img: 'assets/img/luogo-san-giovanni.jpg',
     imgAlt: 'Murales verdi e grigi dipinti su un muro lungo la strada',
+    quartiere: 'San Giovanni',
     ritrovo: 'Stazione di San Giovanni a Teduccio, uscita principale',
     descrizione: 'Un percorso tra i murales che hanno cambiato il volto del quartiere, con le storie degli artisti e delle associazioni che li hanno commissionati. Si cammina sul marciapiede, adatto a tutti.',
     organizzatore: {
@@ -119,6 +122,7 @@ const USCITE = [
     posti: 5,
     img: 'assets/img/luogo-bagnoli.jpg',
     imgAlt: 'Il pontile di Bagnoli sul mare con la costa sullo sfondo',
+    quartiere: 'Bagnoli',
     ritrovo: 'Pontile nord di Bagnoli, ingresso del lungomare',
     descrizione: 'Sveglia presto per la luce migliore: dal pontile alla spiaggia nuova, passando per l’ex area Italsider. Porta la macchina fotografica, il percorso è pianeggiante e dura circa due ore.',
     organizzatore: {
@@ -156,6 +160,7 @@ const USCITE = [
     posti: 10,
     img: 'assets/img/luogo-capodimonte.jpg',
     imgAlt: 'La Reggia di Capodimonte con le palme e il grande prato verde',
+    quartiere: 'Capodimonte',
     ritrovo: 'Ingresso del Real Bosco, Porta Grande',
     descrizione: 'Una passeggiata lenta nei sentieri del bosco, tra alberi secolari e radure. Ritmo tranquillo, adatto a chi vuole camminare senza fatica e a chi cerca un po’ di silenzio.',
     organizzatore: {
@@ -192,6 +197,7 @@ const USCITE = [
     posti: 4,
     img: 'assets/img/luogo-materdei.jpg',
     imgAlt: 'La piazzetta di Materdei con i palazzi e le auto parcheggiate',
+    quartiere: 'Materdei',
     ritrovo: 'Piazzetta San Gennaro a Materdei',
     descrizione: 'Un anello breve tra scale, chiese e botteghe del quartiere, pensato per chi ha voglia di camminare senza fretta. Due salite ripide, il resto tutto in discesa.',
     organizzatore: {
@@ -520,11 +526,66 @@ const GUIDE = [
   }
 ];
 
-/* Realtà locali: bg è il colore del pallino nella lista */
+/* Realtà locali
+   - quartiere: deve combaciare con un nome di QUARTIERI (serve per la mappa)
+   - bg: colore del pallino nella lista                                     */
 const REALTA = [
-  { name: 'Cortile Vivo', meta: 'Volontariato · Sanità', bg: '#D85A30' },
-  { name: 'Spazio Materdei', meta: 'Rigenerazione urbana · Materdei', bg: '#1D7A6B' },
-  { name: 'Collettivo Forcella', meta: 'Teatro e cultura · Forcella', bg: '#1A2238' }
+  { name: 'Cortile Vivo', meta: 'Volontariato · Sanità', quartiere: 'Sanità', bg: '#D85A30' },
+  { name: 'Spazio Materdei', meta: 'Rigenerazione urbana · Materdei', quartiere: 'Materdei', bg: '#1D7A6B' },
+  { name: 'Collettivo Forcella', meta: 'Teatro e cultura · Forcella', quartiere: 'Forcella', bg: '#1A2238' }
+];
+
+/* Quartieri mostrati sulla mappa
+   - nome: deve essere uguale a "zone" dei percorsi e a "quartiere"
+     di uscite e realtà locali: così la mappa li collega da sola
+   - x, y: posizione sul disegno (area 360 × 280, 0,0 = in alto a sinistra)
+   - daTe: quanto è lontano dal quartiere del profilo (Materdei)
+   - curiosita: una frase mostrata nella scheda del quartiere              */
+const QUARTIERI = [
+  {
+    nome: 'Materdei',
+    x: 168, y: 128,
+    daTe: 'Sei qui',
+    curiosita: 'Il nome viene dalla chiesa di Santa Maria Mater Dei. Dalle sue scale si scende a piedi fino alla Sanità, lungo il Cavone.'
+  },
+  {
+    nome: 'Sanità',
+    x: 214, y: 100,
+    daTe: '15 min a piedi',
+    curiosita: 'Qui è nato Totò, nel 1898. Sotto il rione si aprono catacombe e cave di tufo usate per secoli.'
+  },
+  {
+    nome: 'Capodimonte',
+    x: 226, y: 44,
+    daTe: '25 min a piedi',
+    curiosita: 'Il Real Bosco, voluto dai Borbone nel Settecento, è uno dei parchi urbani più grandi d’Italia.'
+  },
+  {
+    nome: 'Forcella',
+    x: 256, y: 150,
+    daTe: '20 min a piedi',
+    curiosita: 'Il nome viene dalla forma a “Y” dell’incrocio delle sue strade, antico simbolo della scuola pitagorica.'
+  },
+  {
+    nome: 'Bagnoli',
+    x: 46, y: 170,
+    daTe: '35 min in metro',
+    curiosita: 'Dove oggi si passeggia sul pontile, fino agli anni Novanta c’era l’acciaieria Italsider.'
+  },
+  {
+    nome: 'San Giovanni',
+    x: 312, y: 164,
+    daTe: '30 min in treno',
+    curiosita: 'Le facciate dei palazzi popolari sono diventate tele: alcuni murales sono alti quanto l’intero edificio.'
+  }
+];
+
+/* Filtri della mappa: cosa mostrare nei quartieri */
+const MAP_LAYERS = [
+  { id: 'tutto', label: 'Tutto' },
+  { id: 'percorsi', label: 'Percorsi' },
+  { id: 'uscite', label: 'Uscite' },
+  { id: 'realta', label: 'Realtà locali' }
 ];
 
 /* Un unico oggetto letto da app.js */
@@ -533,6 +594,8 @@ const DATA = {
   uscite: USCITE,
   percorsi: PERCORSI,
   realta: REALTA,
+  quartieri: QUARTIERI,
+  mapLayers: MAP_LAYERS,
   guide: GUIDE,
   chat: CHAT,
   percorsoChat: PERCORSO_CHAT

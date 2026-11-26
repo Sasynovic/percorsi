@@ -36,7 +36,9 @@ const state = {
   sentType: 'tappa',         // tipo dell'ultima proposta inviata
   sentGuide: null,           // guida dell'ultima attività inviata
   sentName: '',              // titolo dell'ultima proposta inviata
-  sent: false                // proposta inviata?
+  sent: false,               // proposta inviata?
+  mapLayer: 'tutto',         // filtro della mappa (id di MAP_LAYERS)
+  mapZone: 'Materdei'        // quartiere aperto nella scheda della mappa
 };
 
 /* Tipi di proposta della schermata "Proponi".
@@ -301,19 +303,181 @@ function percorsoCard(percorso, showBadge) {
 }
 
 function realtaRow(realta, withAction) {
+  /* In home "Sulla mappa" apre la mappa sul quartiere della realtà;
+     nella mappa la riga mostra anche quanto è lontana */
   const action = withAction
-    ? '<button class="list-row__action" type="button" data-go="mappa">Partecipa</button>'
-    : '<span class="contact">Contatta</span>';
+    ? `<button class="list-row__action" type="button" data-map-zone="${realta.quartiere}">Sulla mappa</button>`
+    : `<button class="list-row__action" type="button" data-demo="contatto">Contatta</button>`;
+
+  const zona = quartiereByName(realta.quartiere);
+  const distanza = !withAction && zona ? ` · ${zona.daTe}` : '';
 
   return `
     <div class="list-row">
       <span class="list-row__dot" style="background: ${realta.bg}"></span>
       <span class="list-row__text">
         <span class="list-row__name">${realta.name}</span>
-        <span class="list-row__meta">${realta.meta}</span>
+        <span class="list-row__meta">${realta.meta}${distanza}</span>
       </span>
       ${action}
     </div>`;
+}
+
+/* --------------------------------------------------------------------------
+   Mappa: quartieri, filtri e scheda del quartiere scelto
+   -------------------------------------------------------------------------- */
+function quartiereByName(nome) {
+  return DATA.quartieri.find((q) => q.nome === nome);
+}
+
+/* Tutto ciò che si trova in un quartiere, diviso per tipo */
+function contenutiQuartiere(nome) {
+  return {
+    percorsi: DATA.percorsi.filter((p) => p.zone === nome),
+    uscite: DATA.uscite.filter((u) => u.quartiere === nome),
+    realta: DATA.realta.filter((r) => r.quartiere === nome)
+  };
+}
+
+/* Quanti elementi conta il filtro attivo */
+function contaPerFiltro(contenuti) {
+  if (state.mapLayer === 'tutto') {
+    return contenuti.percorsi.length + contenuti.uscite.length + contenuti.realta.length;
+  }
+  return contenuti[state.mapLayer].length;
+}
+
+function plurale(n, uno, tanti) {
+  return `${n} ${n === 1 ? uno : tanti}`;
+}
+
+function descriviContenuti(contenuti) {
+  const parti = [];
+  if (contenuti.percorsi.length) parti.push(plurale(contenuti.percorsi.length, 'percorso', 'percorsi'));
+  if (contenuti.uscite.length) parti.push(plurale(contenuti.uscite.length, 'uscita', 'uscite'));
+  if (contenuti.realta.length) parti.push(plurale(contenuti.realta.length, 'realtà locale', 'realtà locali'));
+  return parti.join(', ') || 'niente in programma';
+}
+
+function mapPin(zona) {
+  const contenuti = contenutiQuartiere(zona.nome);
+  const n = contaPerFiltro(contenuti);
+  const attivo = state.mapZone === zona.nome;
+  const sei = zona.daTe === 'Sei qui';
+
+  /* Posizione in percentuale: il bottone segue il disegno a ogni larghezza */
+  const left = (zona.x / 360) * 100;
+  const top = (zona.y / 280) * 100;
+
+  return `
+    <button class="map-pin ${attivo ? 'is-active' : ''} ${n ? '' : 'is-empty'}"
+            type="button"
+            style="left: ${left}%; top: ${top}%"
+            data-map-zone="${zona.nome}"
+            aria-pressed="${attivo}"
+            aria-label="${zona.nome}: ${descriviContenuti(contenuti)}${sei ? ', sei qui' : ''}">
+      <span class="map-pin__count" aria-hidden="true">
+        ${n}
+        ${sei ? '<span class="map-pin__you"></span>' : ''}
+      </span>
+      <span class="map-pin__name" aria-hidden="true">${zona.nome}</span>
+    </button>`;
+}
+
+function zoneItemPercorso(p) {
+  return `
+    <button class="zone-item" type="button" data-open="${p.id}">
+      <img class="zone-item__img" src="${p.img}" alt="" loading="lazy">
+      <span class="zone-item__text">
+        <span class="zone-item__kicker zone-item__kicker--route">Percorso</span>
+        <span class="zone-item__title">${p.name}</span>
+        <span class="zone-item__meta">${p.km} · ${p.durata} · ★ ${averageRating(reviewsOfPercorso(p))}</span>
+      </span>
+    </button>`;
+}
+
+function zoneItemUscita(u) {
+  const joined = Boolean(state.joined[u.id]);
+  const posti = Math.max(0, u.posti - (joined ? 1 : 0));
+
+  return `
+    <button class="zone-item" type="button" data-uscita="${u.id}">
+      <img class="zone-item__img" src="${u.img}" alt="" loading="lazy">
+      <span class="zone-item__text">
+        <span class="zone-item__kicker zone-item__kicker--${u.tone === 'pine' ? 'pine' : 'brick'}">${u.date}</span>
+        <span class="zone-item__title">${u.title}</span>
+        <span class="zone-item__meta">${joined ? 'Sei iscritto' : `${posti} posti liberi`}</span>
+      </span>
+    </button>`;
+}
+
+function zoneItemRealta(r) {
+  return `
+    <div class="zone-item zone-item--static">
+      <span class="zone-item__dot" style="background: ${r.bg}" aria-hidden="true"></span>
+      <span class="zone-item__text">
+        <span class="zone-item__kicker">Realtà locale</span>
+        <span class="zone-item__title">${r.name}</span>
+        <span class="zone-item__meta">${r.meta}</span>
+      </span>
+      <button class="list-row__action" type="button" data-demo="contatto">Contatta</button>
+    </div>`;
+}
+
+function renderMappa() {
+  const zona = quartiereByName(state.mapZone) || DATA.quartieri[0];
+  const contenuti = contenutiQuartiere(zona.nome);
+  const layer = state.mapLayer;
+
+  $('#map-stats').textContent =
+    `${DATA.quartieri.length} quartieri · ${plurale(DATA.percorsi.length, 'percorso', 'percorsi')} · ${plurale(DATA.uscite.length, 'uscita', 'uscite')} in programma`;
+
+  $('#map-layers').innerHTML = DATA.mapLayers
+    .map((l) => {
+      const active = l.id === layer;
+      return `
+        <button class="chip ${active ? 'is-active' : ''}" type="button"
+                data-map-layer="${l.id}" aria-pressed="${active}">
+          ${l.label}
+        </button>`;
+    })
+    .join('');
+
+  $('#map-pins').innerHTML = DATA.quartieri.map(mapPin).join('');
+
+  /* Scheda del quartiere */
+  $('#zone-title').textContent = zona.nome;
+  $('#zone-distance').textContent = zona.daTe;
+  $('#zone-fact').textContent = zona.curiosita;
+
+  const mostra = (tipo) => layer === 'tutto' || layer === tipo;
+  const items = []
+    .concat(mostra('percorsi') ? contenuti.percorsi.map(zoneItemPercorso) : [])
+    .concat(mostra('uscite') ? contenuti.uscite.map(zoneItemUscita) : [])
+    .concat(mostra('realta') ? contenuti.realta.map(zoneItemRealta) : []);
+
+  const n = items.length;
+  $('#zone-count').textContent = n ? plurale(n, 'cosa da fare', 'cose da fare') : '';
+  $('#zone-count').hidden = !n;
+  $('#zone-items').innerHTML = items.join('');
+
+  const etichetta = DATA.mapLayers.find((l) => l.id === layer).label.toLowerCase();
+  $('#zone-empty').hidden = n > 0;
+  $('#zone-empty').innerHTML = layer === 'tutto'
+    ? 'Qui non c’è ancora niente in programma. <button class="link-more" type="button" data-go="proponi">Proponi qualcosa</button>'
+    : `Nessun elemento tra “${etichetta}” a ${zona.nome}. Prova un altro quartiere o filtro.`;
+}
+
+function openMapZone(nome) {
+  if (!quartiereByName(nome)) return;
+
+  if (state.screen !== 'mappa') {
+    navigate('mappa', { mapZone: nome });
+    return;
+  }
+
+  state.mapZone = nome;
+  renderMappa();
 }
 
 /* --------------------------------------------------------------------------
@@ -325,6 +489,7 @@ function render() {
   renderUscite();
   renderPercorsi();
   renderRealta();
+  renderMappa();
   renderDetail();
   renderUscita();
   renderJoined();
@@ -386,7 +551,10 @@ function renderPercorsi() {
 
 function renderRealta() {
   $('#realta-home').innerHTML = DATA.realta.map((r) => realtaRow(r, true)).join('');
-  $('#realta-mappa').innerHTML = DATA.realta.map((r) => realtaRow(r, false)).join('');
+  /* Nella mappa, prima le realtà più vicine (l'ordine di QUARTIERI) */
+  const ordine = (r) => DATA.quartieri.findIndex((q) => q.nome === r.quartiere);
+  const vicine = DATA.realta.slice().sort((a, b) => ordine(a) - ordine(b));
+  $('#realta-mappa').innerHTML = vicine.map((r) => realtaRow(r, false)).join('');
 }
 
 function renderDetail() {
@@ -996,6 +1164,19 @@ document.addEventListener('click', (event) => {
 
   if (event.target.closest('[data-percorso-review]')) {
     togglePercorsoReview();
+    return;
+  }
+
+  const mapZoneButton = event.target.closest('[data-map-zone]');
+  if (mapZoneButton) {
+    openMapZone(mapZoneButton.dataset.mapZone);
+    return;
+  }
+
+  const mapLayerButton = event.target.closest('[data-map-layer]');
+  if (mapLayerButton) {
+    state.mapLayer = mapLayerButton.dataset.mapLayer;
+    renderMappa();
     return;
   }
 
