@@ -14,6 +14,19 @@ Non serve installare niente, né avviare un server.
 > il ricaricamento. Per provare tutto senza limiti usa un piccolo server locale
 > (ad esempio l'estensione "Live Server" di VS Code).
 
+## Pubblicazione online (GitHub Pages)
+
+Il sito è pubblicato su **https://sasynovic.github.io/percorsi/**.
+
+La pubblicazione è automatica: a ogni push su `main` il workflow
+`.github/workflows/pages.yml` (nella cartella principale del repository) copia
+`index.html`, `css/`, `js/` e `assets/` e li pubblica su GitHub Pages. README e
+configurazioni locali non vengono pubblicati.
+
+Per attivarla la prima volta: su GitHub, **Settings → Pages → Source:
+GitHub Actions**. Per ripubblicare senza modifiche: scheda **Actions** →
+"Pubblica su GitHub Pages" → **Run workflow**.
+
 ## Struttura
 
 ```
